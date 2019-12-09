@@ -36,6 +36,7 @@ class BasicHiversTest {
                     before(TestService::pong.javaMethod) { println("before >> ") }
 
                     // Define AoP behaviour around calls to the pong method.
+                    /*
                     around(TestService::pong.javaMethod) { ctx ->
                         val before = System.nanoTime()
                         val res: Any? = ctx.proceed()
@@ -49,6 +50,7 @@ class BasicHiversTest {
                         println("result is: $res")
                         res
                     }
+                    */
 
                     // Adds behaviour after the calls to pong.
                     after(TestService::pong.javaMethod) { println("<< after !") }
