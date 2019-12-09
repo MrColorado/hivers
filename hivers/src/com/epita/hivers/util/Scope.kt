@@ -16,19 +16,26 @@ class Scope {
         this.providers = ArrayList()
     }
 
+    private fun createOrReplace(classType: Class<*>, provider: Provider<*>) {
+        val index = providers.indexOfFirst { p -> p.javaClass == classType }
+        if (index < 0) {
+            providers.add(provider)
+        } else {
+            providers[index] = provider
+        }
+    }
+
     fun bean(any: Any) {
-        val singleton = Singleton(any.javaClass, Supplier { any })
-        providers.add(0, singleton)
+        bean(any.javaClass, any)
     }
 
     fun <BEAN_TYPE> bean(classType: Class<BEAN_TYPE>, any: BEAN_TYPE) {
         val singleton = Singleton(classType, Supplier { any })
-        providers.add(0, singleton)
+        provider(classType, singleton)
     }
 
     fun <BEAN_TYPE> bean(classType: Class<BEAN_TYPE>, any: BEAN_TYPE, lambda: () -> Unit) {
-        val singleton = Singleton(classType, Supplier{ any })
-        providers.add(0, singleton)
+        bean(classType, any)
         lambda()
     }
 
@@ -37,6 +44,10 @@ class Scope {
                 .filter { provider -> provider.providesForClass().isAssignableFrom(expectedClass) }
                 .map { provider -> provider as Provider<BEAN_TYPE>}
                 .findFirst()
+    }
+
+    fun <BEAN_TYPE> provider(expectedClass : Class<BEAN_TYPE>, provider: Provider<BEAN_TYPE>) {
+        createOrReplace(expectedClass, provider)
     }
 
 }

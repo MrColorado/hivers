@@ -42,7 +42,9 @@ class Hivers : ScopeStack {
 
     }
 
-    fun <BEAN_TYPE> provider(expectedClass : Class<BEAN_TYPE>, prototype: Provider<BEAN_TYPE>) {
+    fun <BEAN_TYPE> provider(expectedClass : Class<BEAN_TYPE>, provider: Provider<BEAN_TYPE>) {
+        val topScope = stack.peekFirst()
+        topScope.provider(expectedClass, provider)
     }
 
     fun before(method: Method?, lambda: () -> Unit) {
