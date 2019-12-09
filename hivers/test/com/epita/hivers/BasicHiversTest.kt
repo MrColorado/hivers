@@ -57,11 +57,10 @@ class BasicHiversTest {
                 }
 
                 // Define AoP behaviour around calls to the pong method.
-                provider(Nested::class.java, Singleton(Nested::class.java, Supplier {Nested(instanceOf(TestService::class.java))}))
+                provider(Nested::class.java, Singleton(Nested::class.java, Supplier { Nested(instanceOf(TestService::class.java)) }))
                 provider(Nested::class.java, Prototype(Nested::class.java, Supplier { Nested(instanceOf(TestService::class.java)) }))
             }
         }
-
 
         // Test call.
         val testService: TestService = hivers.instanceOf(TestService::class.java)
