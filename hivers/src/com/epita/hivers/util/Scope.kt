@@ -35,7 +35,7 @@ class Scope {
         provider(classType, singleton)
     }
 
-    fun <BEAN_TYPE> bean(classType: Class<BEAN_TYPE>, any: BEAN_TYPE, lambda: () -> Unit) {
+    fun <BEAN_TYPE> bean(classType: Class<BEAN_TYPE>, any: BEAN_TYPE, lambda: Provider<BEAN_TYPE>.() -> Unit) {
         bean(classType, any)
         lambda()
     }

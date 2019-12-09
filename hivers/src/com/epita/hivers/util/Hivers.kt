@@ -3,6 +3,7 @@ package com.epita.hivers.util
 import com.epita.hivers.provider.Provider
 import java.lang.Exception
 import java.lang.reflect.Method
+import java.lang.reflect.Proxy
 import java.util.*
 
 class Hivers : ScopeStack {
@@ -28,9 +29,17 @@ class Hivers : ScopeStack {
         topScope.bean(classType, any)
     }
 
-    fun <BEAN_TYPE> bean(classType: Class<BEAN_TYPE>, any: BEAN_TYPE, lambda: () -> Unit) {
+    fun <BEAN_TYPE> bean(classType: Class<BEAN_TYPE>, obj: BEAN_TYPE, lambda: Provider<BEAN_TYPE>.() -> Unit) {
         val topScope = stack.peekFirst()
-        topScope.bean(classType, any)
+        topScope.bean(classType, obj, lambda)
+        /*
+        val adapter = BeforeAdapter()
+        Proxy.newProxyInstance(
+            classType.classLoader,
+            arrayOf(classType),
+            adapter
+        )
+        */
     }
 
     fun <BEAN_TYPE> instanceOf(expectedClass: Class<BEAN_TYPE>): BEAN_TYPE {
