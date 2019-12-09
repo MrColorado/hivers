@@ -1,6 +1,7 @@
 package com.epita.hivers.util
 
 import com.epita.hivers.provider.Provider
+import java.lang.Exception
 import java.util.*
 
 interface ScopeStack {
@@ -19,11 +20,14 @@ interface ScopeStack {
         return getScopeStack().pop()
     }
 
-    /*
-    fun <BEAN_TYPE> getTopProviderClass(classType: Class<BEAN_TYPE>) : Optional<Provider<BEAN_TYPE>> {
-        return getScopeStack().stream()
-                .map { scope ->  scope.getProvidersForClass() as  }
-    }
-    */
 
+    fun <BEAN_TYPE> getProviderClass(classType: Class<BEAN_TYPE>) : Provider<BEAN_TYPE> {
+        val stack = getScopeStack()
+        for (scope: Scope in stack) {
+            val provider = scope.getProviderForClass(classType)
+            if (provider.isPresent)
+                return provider.get()
+        }
+        throw Exception("class not found")
+    }
 }
