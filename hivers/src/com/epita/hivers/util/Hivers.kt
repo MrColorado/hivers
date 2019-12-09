@@ -10,6 +10,7 @@ class Hivers : ScopeStack {
     private val stack: Deque<Scope> = ArrayDeque()
 
     constructor(initializer: Hivers.() -> Unit) {
+        stack.push(Scope())
         initializer.invoke(this)
     }
 
