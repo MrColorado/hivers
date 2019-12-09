@@ -67,3 +67,9 @@ class BasicHiversTest {
         Thread.sleep(5000000)
     }
 }
+
+private infix fun Int.timesDo(function: () -> Unit) {
+    for (i in 1..this) {
+        function()
+    }
+}
