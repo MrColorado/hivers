@@ -8,12 +8,13 @@ import java.util.function.Supplier
 class Scope {
     private val providers : MutableList<Provider<*>>
 
-    constructor(providers: MutableList<Provider<*>>) {
-        this.providers = providers
-    }
-
     constructor() {
         this.providers = ArrayList()
+    }
+
+    constructor(initializer: Scope.() -> Unit) {
+        this.providers = ArrayList()
+        initializer.invoke(this)
     }
 
     private fun createOrReplace(classType: Class<*>, provider: Provider<*>) {
