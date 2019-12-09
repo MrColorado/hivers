@@ -18,7 +18,7 @@ class BasicHiversTest {
         val hivers = Hivers {
 
             // Add a provider to the scope, of type prototype, that binds on Nested.class.
-            provider(Nested::class.java, Prototype(Supplier { Nested(instanceOf(TestService::class.java)) }))
+            provider(Nested::class.java, Prototype(Nested::class.java, Supplier { Nested(instanceOf(TestService::class.java)) }))
 
             // Shortcut for singleton addition.
             bean(TestService::class.java, TestServiceImpl())
@@ -58,7 +58,7 @@ class BasicHiversTest {
 
                 // Define AoP behaviour around calls to the pong method.
                 provider(Nested::class.java, Singleton(Nested::class.java, Supplier {Nested(instanceOf(TestService::class.java))}))
-                provider(Nested::class.java, Prototype(Supplier { Nested(instanceOf(TestService::class.java)) }))
+                provider(Nested::class.java, Prototype(Nested::class.java, Supplier { Nested(instanceOf(TestService::class.java)) }))
             }
         }
 
