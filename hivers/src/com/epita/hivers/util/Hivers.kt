@@ -1,28 +1,33 @@
 package com.epita.hivers.util
 
 import com.epita.hivers.provider.Provider
+import com.epita.hivers.provider.Singleton
 import java.lang.Exception
 import java.lang.reflect.Method
+import java.util.function.Supplier
 import kotlin.collections.ArrayList
 
 class Hivers {
-    private val providerList: List<Provider<*>> = ArrayList()
-    private val scopeStack: List<Provider<*>> = ArrayList()
+    private val providerList: MutableList<Provider<*>> = ArrayList()
+    private val scopeStack: MutableList<Provider<*>> = ArrayList()
 
     constructor(initializer: Hivers.() -> Unit) {
         initializer.invoke(this)
     }
 
     fun bean(any: Any) {
-
+        val singleton = Singleton(any.javaClass, Supplier { any })
+        providerList.add(singleton)
     }
 
-    fun bean(classType: Class<out Any>, any: Any) {
-
+    fun <BEAN_TYPE> bean(classType: Class<BEAN_TYPE>, any: BEAN_TYPE) {
+        val singleton = Singleton(classType, Supplier { any })
+        providerList.add(singleton)
     }
 
-    fun bean(classType: Class<out Any>, any: Any, lambda: () -> Unit) {
-
+    fun <BEAN_TYPE> bean(classType: Class<BEAN_TYPE>, any: BEAN_TYPE, lambda: () -> Unit) {
+        val singleton = Singleton(classType, Supplier{ any })
+        providerList.add(singleton)
     }
 
     fun <BEAN_TYPE> instanceOf(expectedClass: Class<BEAN_TYPE>): BEAN_TYPE {

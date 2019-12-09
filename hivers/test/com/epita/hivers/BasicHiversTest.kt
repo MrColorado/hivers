@@ -66,7 +66,7 @@ class BasicHiversTest {
         // Test call.
         val testService: TestService = hivers.instanceOf(TestService::class.java)
         5 timesDo { testService.ping() }
-        Thread.sleep(5000000)
+        Thread.sleep(10)
     }
 }
 
