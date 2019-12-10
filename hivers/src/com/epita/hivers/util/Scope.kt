@@ -36,8 +36,8 @@ class Scope {
     }
 
     fun <BEAN_TYPE> bean(classType: Class<BEAN_TYPE>, any: BEAN_TYPE, lambda: Provider<BEAN_TYPE>.() -> Unit) {
-        bean(classType, any)
-        //lambda()
+        val singleton = Singleton(classType, Supplier { any }, lambda)
+        provider(classType, singleton)
     }
 
     fun <BEAN_TYPE> getProviderForClass(expectedClass: Class<BEAN_TYPE>) : Optional<Provider<BEAN_TYPE>> {
