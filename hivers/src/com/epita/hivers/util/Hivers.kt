@@ -58,8 +58,7 @@ class Hivers : ScopeStack {
 
     @NotPure
     fun scope(@NotNull lambda: Scope.() -> Unit) {
-        val scope = Scope()
-        lambda.invoke(scope)
+        val scope = Scope(lambda)
         stack.push(scope)
     }
 
