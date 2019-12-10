@@ -1,4 +1,4 @@
-package com.epita.hivers.util
+package com.epita.hivers.interfaces
 
 import java.lang.reflect.Method
 

@@ -1,11 +1,10 @@
-package com.epita.hivers.util
+package com.epita.hivers.interfaces
 
 import com.epita.hivers.annotations.NotPure
 import com.epita.hivers.annotations.Pure
 import com.epita.hivers.exception.ProviderClassNotFoundException
 import com.epita.hivers.exception.ScopeEmptyException
-import com.epita.hivers.provider.Provider
-import java.lang.Exception
+import com.epita.hivers.core.Scope
 import java.util.*
 
 interface ScopeStack {

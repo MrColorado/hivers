@@ -1,8 +1,11 @@
 package com.epita.hivers.provider
 
 import com.epita.hivers.annotations.Pure
-import com.epita.hivers.util.Aspect
-import com.epita.hivers.util.Hivers
+import com.epita.hivers.interfaces.Provider
+import com.epita.hivers.interfaces.Aspect
+import com.epita.hivers.core.Hivers
+import com.epita.hivers.provider.aspects.After
+import com.epita.hivers.provider.aspects.Before
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
 

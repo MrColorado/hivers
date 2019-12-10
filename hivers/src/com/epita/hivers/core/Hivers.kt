@@ -1,10 +1,10 @@
-package com.epita.hivers.util
+package com.epita.hivers.core
 
 import com.epita.hivers.annotations.NotPure
 import com.epita.hivers.annotations.Pure
-import com.epita.hivers.provider.Provider
+import com.epita.hivers.interfaces.Provider
+import com.epita.hivers.interfaces.ScopeStack
 import java.lang.Exception
-import java.lang.reflect.Method
 import java.util.*
 
 class Hivers(initializer: Hivers.() -> Unit) : Scope(), ScopeStack {

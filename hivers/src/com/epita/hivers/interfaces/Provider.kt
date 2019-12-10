@@ -1,7 +1,6 @@
-package com.epita.hivers.provider
+package com.epita.hivers.interfaces
 
 import java.lang.reflect.Method
-import java.util.*
 
 interface Provider<BEAN_TYPE> {
     fun provide() : BEAN_TYPE?

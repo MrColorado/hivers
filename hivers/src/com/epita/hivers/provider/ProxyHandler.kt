@@ -1,7 +1,9 @@
 package com.epita.hivers.provider
 
 import com.epita.hivers.annotations.Pure
-import com.epita.hivers.util.Aspect
+import com.epita.hivers.interfaces.Aspect
+import com.epita.hivers.provider.aspects.After
+import com.epita.hivers.provider.aspects.Before
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 
@@ -20,9 +22,9 @@ class ProxyHandler<BEAN_TYPE> : InvocationHandler {
     override fun invoke(proxy: Any?, method: Method?, args: Array<out Any>?): Any {
         if (null == method || null == proxy)
             throw RuntimeException("Method or proxy is null")
-        aspectList.stream().filter{aspect -> aspect is Before }.forEach{aspect -> aspect.execute(bean, method, args)}
+        aspectList.stream().filter{aspect -> aspect is Before }.forEach{ aspect -> aspect.execute(bean, method, args)}
         var result = method.invoke(proxy, args)
-        aspectList.stream().filter{aspect -> aspect is After }.forEach{aspect -> aspect.execute(bean, method, args)}
+        aspectList.stream().filter{aspect -> aspect is After }.forEach{ aspect -> aspect.execute(bean, method, args)}
         return result
     }
 }

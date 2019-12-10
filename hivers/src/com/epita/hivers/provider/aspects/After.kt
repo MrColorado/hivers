@@ -1,7 +1,4 @@
-package com.epita.hivers.provider
-
-import com.epita.hivers.util.Aspect
-import java.lang.reflect.Method
+package com.epita.hivers.provider.aspects
 
 class After<BEAN_TYPE> : AbstractAspect<BEAN_TYPE> {
 

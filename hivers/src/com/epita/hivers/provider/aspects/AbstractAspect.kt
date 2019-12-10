@@ -1,6 +1,6 @@
-package com.epita.hivers.provider
+package com.epita.hivers.provider.aspects
 
-import com.epita.hivers.util.Aspect
+import com.epita.hivers.interfaces.Aspect
 import java.lang.reflect.Method
 
 abstract class AbstractAspect<BEAN_TYPE> : Aspect<BEAN_TYPE> {

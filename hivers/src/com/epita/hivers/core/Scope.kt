@@ -1,8 +1,8 @@
-package com.epita.hivers.util
+package com.epita.hivers.core
 
 import com.epita.hivers.annotations.NotPure
 import com.epita.hivers.annotations.Pure
-import com.epita.hivers.provider.Provider
+import com.epita.hivers.interfaces.Provider
 import com.epita.hivers.provider.Singleton
 import java.util.*
 import java.util.function.Supplier

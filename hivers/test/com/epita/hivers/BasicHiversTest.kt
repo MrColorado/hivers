@@ -1,12 +1,11 @@
 package com.epita.hivers
 
 import com.epita.hivers.provider.Prototype
-import com.epita.hivers.provider.Singleton
 import com.epita.hivers.test.Nested
 import com.epita.hivers.test.TestService
 import com.epita.hivers.test.TestServiceBlipImpl
 import com.epita.hivers.test.TestServiceImpl
-import com.epita.hivers.util.*
+import com.epita.hivers.core.*
 import org.junit.Test
 import java.util.function.Supplier
 import kotlin.reflect.jvm.javaMethod

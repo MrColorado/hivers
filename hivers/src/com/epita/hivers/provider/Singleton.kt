@@ -1,6 +1,7 @@
 package com.epita.hivers.provider
 
 import com.epita.hivers.annotations.Pure
+import com.epita.hivers.interfaces.Provider
 import java.util.function.Supplier
 
 class Singleton<BEAN_TYPE> : AbstractProvider<BEAN_TYPE> {
