@@ -14,6 +14,6 @@ abstract class AbstractAspect<BEAN_TYPE> : Aspect<BEAN_TYPE> {
 
     override fun execute(bean: BEAN_TYPE, method: Method, args: Array<out Any>?) {
         if (methodName == method.name)
-            lambda.invoke()
+            lambda()
     }
 }

@@ -27,12 +27,11 @@ abstract class AbstractProvider<BEAN_TYPE> : Provider<BEAN_TYPE> {
     @Pure
     fun proxify(bean: BEAN_TYPE): BEAN_TYPE {
         val adapter = ProxyHandler(bean, aspects)
-        Proxy.newProxyInstance(
-            Hivers::class.java.classLoader,
-            arrayOf(providesClass),
-            adapter
-        )
-        return bean
+        return Proxy.newProxyInstance(
+                this.javaClass.classLoader,
+                arrayOf(providesClass),
+                adapter
+        ) as BEAN_TYPE
     }
 
     override fun before(method: Method?, lambda: () -> Unit) {
@@ -40,11 +39,13 @@ abstract class AbstractProvider<BEAN_TYPE> : Provider<BEAN_TYPE> {
             throw java.lang.RuntimeException("Cannot aspect null method")
         this.aspects.add(Before(lambda, method.name))
     }
+
     override fun after(method: Method?, lambda: () -> Unit) {
         if (method == null)
             throw java.lang.RuntimeException("Cannot aspect null method")
         this.aspects.add(After(lambda, method.name))
     }
+
     override fun around(method: Method?, lambda: () -> Unit) {
         throw RuntimeException("Not implemented")
     }
