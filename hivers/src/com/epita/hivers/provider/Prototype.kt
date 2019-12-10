@@ -20,6 +20,6 @@ class Prototype<BEAN_TYPE> : AbstractProvider<BEAN_TYPE> {
 
     @Pure
     override fun provide(): BEAN_TYPE? {
-        return supplier.get()
+        return proxify(supplier.get())
     }
 }

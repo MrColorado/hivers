@@ -23,7 +23,7 @@ class Singleton<BEAN_TYPE> : AbstractProvider<BEAN_TYPE> {
     @Pure
     override fun provide(): BEAN_TYPE? {
         if (null == value) {
-            value = supplier.get()
+            value = proxify(supplier.get())
         }
         return value
     }

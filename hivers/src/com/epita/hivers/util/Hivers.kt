@@ -34,14 +34,6 @@ class Hivers(initializer: Hivers.() -> Unit) : Scope(), ScopeStack {
     override fun <BEAN_TYPE> bean(classType: Class<BEAN_TYPE>, obj: BEAN_TYPE,
                                   lambda: Provider<BEAN_TYPE>.() -> Unit) {
         stack.peekFirst().bean(classType, obj, lambda)
-        /*
-        val adapter = BeforeAdapter()
-        Proxy.newProxyInstance(
-            classType.classLoader,
-            arrayOf(classType),
-            adapter
-        )
-        */
     }
 
     @Pure
@@ -59,17 +51,5 @@ class Hivers(initializer: Hivers.() -> Unit) : Scope(), ScopeStack {
     @NotPure
     override fun <BEAN_TYPE> provider(expectedClass: Class<BEAN_TYPE>, provider: Provider<BEAN_TYPE>) {
         stack.peekFirst().provider(expectedClass, provider)
-    }
-
-    fun before(method: Method?, lambda: () -> Unit) {
-
-    }
-
-    fun around(method: Method?, lambda: (ctx: Method) -> Unit) {
-
-    }
-
-    fun after(method: Method?, lambda: () -> Unit) {
-
     }
 }
