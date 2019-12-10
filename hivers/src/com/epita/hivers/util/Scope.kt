@@ -37,7 +37,7 @@ class Scope {
 
     fun <BEAN_TYPE> bean(classType: Class<BEAN_TYPE>, any: BEAN_TYPE, lambda: Provider<BEAN_TYPE>.() -> Unit) {
         bean(classType, any)
-        lambda()
+        //lambda()
     }
 
     fun <BEAN_TYPE> getProviderForClass(expectedClass: Class<BEAN_TYPE>) : Optional<Provider<BEAN_TYPE>> {

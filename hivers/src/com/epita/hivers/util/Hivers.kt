@@ -47,8 +47,9 @@ class Hivers : ScopeStack {
         return provider.provide() ?: throw Exception("Implementation not found")
     }
 
-    fun scope(lambda: () -> Unit) {
-        val scope = Scope { lambda() }
+    fun scope(lambda: Scope.() -> Unit) {
+        val scope = Scope()
+        lambda.invoke(scope)
         stack.push(scope)
     }
 

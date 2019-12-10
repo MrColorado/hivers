@@ -10,7 +10,13 @@ interface Provider<BEAN_TYPE> {
     fun provide() : BEAN_TYPE?
     fun providesForClass() : Class<BEAN_TYPE>
 
-    fun before(method: Method, lambda: () -> Unit) : Any
-    fun after(method: Method, lambda: () -> Unit) : Any
-    fun around(method: Method, lambda: () -> Unit) : Any
+    fun before(method: Method, lambda: () -> Unit) : Any {
+        return provideOptional()
+    }
+    fun after(method: Method, lambda: () -> Unit) : Any {
+        return provideOptional()
+    }
+    fun around(method: Method, lambda: () -> Unit) : Any {
+        return provideOptional()
+    }
 }

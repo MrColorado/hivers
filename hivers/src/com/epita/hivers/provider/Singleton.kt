@@ -5,18 +5,26 @@ import java.util.function.Supplier
 class Singleton<BEAN_TYPE> : Provider<BEAN_TYPE> {
 
     private val providesClass: Class<BEAN_TYPE>
-    private val initializer: Supplier<BEAN_TYPE>
+    private val supplier: Supplier<BEAN_TYPE>
     private var value: BEAN_TYPE? = null
 
     constructor(providesClass: Class<BEAN_TYPE>,
-                  initializer: Supplier<BEAN_TYPE>) {
+                  supplier: Supplier<BEAN_TYPE>) {
         this.providesClass = providesClass
-        this.initializer = initializer
+        this.supplier = supplier
+    }
+
+    constructor(providesClass: Class<BEAN_TYPE>,
+                supplier: Supplier<BEAN_TYPE>,
+                initializer: Provider<BEAN_TYPE>.() -> Unit){
+        this.providesClass = providesClass
+        this.supplier = supplier
+        initializer.invoke(this)
     }
 
     override fun provide(): BEAN_TYPE? {
         if (null == value) {
-            value = initializer.get()
+            value = supplier.get()
         }
         return value
     }
