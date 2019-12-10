@@ -1,5 +1,8 @@
 package com.epita.hivers.util
 
+import com.epita.hivers.annotations.NotNull
+import com.epita.hivers.annotations.NotPure
+import com.epita.hivers.annotations.Pure
 import com.epita.hivers.provider.Provider
 import java.lang.Exception
 import java.lang.reflect.Method
@@ -19,17 +22,21 @@ class Hivers : ScopeStack {
         return stack
     }
 
-    fun bean(any: Any) {
+    @NotPure
+    fun bean(@NotNull any: Any) {
         val topScope = stack.peekFirst()
         topScope.bean(any)
     }
 
-    fun <BEAN_TYPE> bean(classType: Class<BEAN_TYPE>, any: BEAN_TYPE) {
+    @NotPure
+    fun <BEAN_TYPE> bean(@NotNull classType: Class<BEAN_TYPE>, @NotNull any: BEAN_TYPE) {
         val topScope = stack.peekFirst()
         topScope.bean(classType, any)
     }
 
-    fun <BEAN_TYPE> bean(classType: Class<BEAN_TYPE>, obj: BEAN_TYPE, lambda: Provider<BEAN_TYPE>.() -> Unit) {
+    @NotPure
+    fun <BEAN_TYPE> bean(@NotNull classType: Class<BEAN_TYPE>, @NotNull obj: BEAN_TYPE,
+                         @NotNull lambda: Provider<BEAN_TYPE>.() -> Unit) {
         val topScope = stack.peekFirst()
         topScope.bean(classType, obj, lambda)
         /*
@@ -42,18 +49,22 @@ class Hivers : ScopeStack {
         */
     }
 
-    fun <BEAN_TYPE> instanceOf(expectedClass: Class<BEAN_TYPE>): BEAN_TYPE {
+    @Pure
+    @NotNull
+    fun <BEAN_TYPE> instanceOf(@NotNull expectedClass: Class<BEAN_TYPE>): BEAN_TYPE {
         val provider = getProviderClass(expectedClass)
         return provider.provide() ?: throw Exception("Implementation not found")
     }
 
-    fun scope(lambda: Scope.() -> Unit) {
+    @NotPure
+    fun scope(@NotNull lambda: Scope.() -> Unit) {
         val scope = Scope()
         lambda.invoke(scope)
         stack.push(scope)
     }
 
-    fun <BEAN_TYPE> provider(expectedClass: Class<BEAN_TYPE>, provider: Provider<BEAN_TYPE>) {
+    @NotPure
+    fun <BEAN_TYPE> provider(@NotNull expectedClass: Class<BEAN_TYPE>, @NotNull provider: Provider<BEAN_TYPE>) {
         val topScope = stack.peekFirst()
         topScope.provider(expectedClass, provider)
     }

@@ -1,5 +1,7 @@
 package com.epita.hivers.provider
 
+import com.epita.hivers.annotations.NotNull
+import com.epita.hivers.annotations.Pure
 import java.util.function.Supplier
 
 class Singleton<BEAN_TYPE> : Provider<BEAN_TYPE> {
@@ -22,6 +24,8 @@ class Singleton<BEAN_TYPE> : Provider<BEAN_TYPE> {
         initializer.invoke(this)
     }
 
+    @Pure
+    @NotNull
     override fun provide(): BEAN_TYPE? {
         if (null == value) {
             value = supplier.get()
@@ -29,6 +33,8 @@ class Singleton<BEAN_TYPE> : Provider<BEAN_TYPE> {
         return value
     }
 
+    @Pure
+    @NotNull
     override fun providesForClass(): Class<BEAN_TYPE> {
         return providesClass
     }

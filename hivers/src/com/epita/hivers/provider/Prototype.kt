@@ -1,5 +1,7 @@
 package com.epita.hivers.provider
 
+import com.epita.hivers.annotations.NotNull
+import com.epita.hivers.annotations.Pure
 import java.util.function.Supplier
 
 class Prototype<BEAN_TYPE> : Provider<BEAN_TYPE> {
@@ -20,10 +22,14 @@ class Prototype<BEAN_TYPE> : Provider<BEAN_TYPE> {
         initializer.invoke(this)
     }
 
+    @Pure
+    @NotNull
     override fun provide(): BEAN_TYPE? {
         return supplier.get()
     }
 
+    @Pure
+    @NotNull
     override fun providesForClass(): Class<BEAN_TYPE> {
         return providesClass
     }
