@@ -7,6 +7,8 @@ import java.util.*
 interface ScopeStack {
 
     fun getScopeStack() : Deque<Scope>
+    val MIN_STACK_SIZE: Int
+        get() = 1
 
     fun peek() : Scope {
         return getScopeStack().peek()
@@ -16,8 +18,11 @@ interface ScopeStack {
         getScopeStack().push(scope)
     }
 
-    fun pop() : Scope {
-        return getScopeStack().pop()
+    fun pop() {
+        if (MIN_STACK_SIZE ==getScopeStack().size) {
+            throw Exception("There is no scope left")
+        }
+        getScopeStack().pop()
     }
 
 
