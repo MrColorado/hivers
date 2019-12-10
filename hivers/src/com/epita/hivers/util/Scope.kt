@@ -7,7 +7,7 @@ import com.epita.hivers.provider.Singleton
 import java.util.*
 import java.util.function.Supplier
 
-class Scope {
+open class Scope {
     private val providers: MutableList<Provider<*>>
 
     constructor() {
@@ -30,33 +30,32 @@ class Scope {
     }
 
     @NotPure
-    fun bean(any: Any) {
+    open fun bean(any: Any) {
         bean(any.javaClass, any)
     }
 
     @NotPure
-    fun <BEAN_TYPE> bean(classType: Class<BEAN_TYPE>, any: BEAN_TYPE) {
+    open fun <BEAN_TYPE> bean(classType: Class<BEAN_TYPE>, any: BEAN_TYPE) {
         val singleton = Singleton(classType, Supplier { any })
         provider(classType, singleton)
     }
 
     @NotPure
-    fun <BEAN_TYPE> bean(classType: Class<BEAN_TYPE>, any: BEAN_TYPE,
-                         lambda: Provider<BEAN_TYPE>.() -> Unit) {
+    open fun <BEAN_TYPE> bean(classType: Class<BEAN_TYPE>, any: BEAN_TYPE,
+                              lambda: Provider<BEAN_TYPE>.() -> Unit) {
         val singleton = Singleton(classType, Supplier { any }, lambda)
         provider(classType, singleton)
     }
 
     @Pure
-    fun <BEAN_TYPE> getProviderForClass(expectedClass: Class<BEAN_TYPE>): Optional<Provider<BEAN_TYPE>> {
-        return providers.stream()
-                .filter { provider -> provider.providesForClass().isAssignableFrom(expectedClass) }
+    fun <BEAN_TYPE> getProviderForClass(expectedClass: Class<BEAN_TYPE>): Provider<BEAN_TYPE>? {
+        return providers.filter { provider -> provider.providesForClass().isAssignableFrom(expectedClass) }
                 .map { provider -> provider as Provider<BEAN_TYPE> }
-                .findFirst()
+                .firstOrNull()
     }
 
     @NotPure
-    fun <BEAN_TYPE> provider(expectedClass: Class<BEAN_TYPE>, provider: Provider<BEAN_TYPE>) {
+    open fun <BEAN_TYPE> provider(expectedClass: Class<BEAN_TYPE>, provider: Provider<BEAN_TYPE>) {
         createOrReplace(expectedClass, provider)
     }
 }
