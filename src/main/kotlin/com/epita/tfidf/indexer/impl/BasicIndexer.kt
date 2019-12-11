@@ -4,17 +4,10 @@ import com.epita.tfidf.indexer.core.Index
 import com.epita.tfidf.indexer.core.Indexer
 import com.epita.tfidf.models.Vectorized
 
-class BasicIndexer : Indexer {
-
-    private val index: Index
-
-    constructor(index: Index) {
-        this.index = index
-    }
+class BasicIndexer(private val index: Index) : Indexer {
 
     override fun indexDocument(document: Vectorized) {
-        for((key, _) in document.keywords) {
-            index.insert(key, document)
-        }
+        index.index(document)
+        document.keywords.forEach { (key, _) -> index.insert(key, document) }
     }
 }
