@@ -6,8 +6,20 @@ import java.util.regex.Pattern
 
 
 class Crawler : Runnable {
+
+    private var recursive: Boolean
+
+    constructor(recursive: Boolean) {
+        this.recursive = recursive
+    }
+
+    constructor() {
+        this.recursive = true
+    }
+
+
     override fun run() {
-        while (Scraper.toVisitLinks.size > 0) {
+        do {
             val url = Scraper.toVisitLinks.remove()
             if (!Scraper.visitedLinks.contains(url)) {
                 val pattern = Pattern.compile("[^/]/[^/]")
@@ -18,6 +30,8 @@ class Crawler : Runnable {
                 val rootUrl = url.substring(0, index)
                 try {
                     Jsoup.connect(url).get().run {
+                        // TODO Handle document
+                        Scraper.scrapedDocument.add(this)
                         val links = this.select("a[href]")
                         for (link in links) {
                             var href = link.attr("href")
@@ -33,6 +47,6 @@ class Crawler : Runnable {
                 }
                 Scraper.visitedLinks.add(url)
             }
-        }
+        } while (Scraper.toVisitLinks.size > 0 && recursive)
     }
 }
