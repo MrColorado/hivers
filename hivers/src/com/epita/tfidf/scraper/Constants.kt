@@ -1,4 +1,4 @@
-package com.epita.scraper
+package com.epita.tfidf.scraper
 
 class Constants {
     companion object {
