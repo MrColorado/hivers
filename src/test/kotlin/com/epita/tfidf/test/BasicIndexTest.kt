@@ -31,7 +31,7 @@ class BasicIndexTest {
 
         val tokenizedDocument = tokenizer.compute(cleaned)
 
-        val tokenizedQuery = tokenizer.compute(Cleaned("", "wikipedia wikipedia"))
+        val tokenizedQuery = tokenizer.compute(Cleaned("", "wikipedia main home page toto"))
 
         val vectorizer = BasicVectorizer()
 

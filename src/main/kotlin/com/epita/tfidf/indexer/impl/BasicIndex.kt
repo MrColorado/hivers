@@ -1,5 +1,6 @@
 package com.epita.tfidf.indexer.impl
 
+import com.epita.tfidf.idf.impl.IdfCalculator
 import com.epita.tfidf.indexer.core.Index
 import com.epita.tfidf.indexer.core.Indexer
 import com.epita.tfidf.models.Vectorized
@@ -25,13 +26,24 @@ class BasicIndex : Index {
     }
 
     override fun search(query: Vectorized) : Set<Vectorized> {
-        return query.keywords
+        val matchingDocuments = query.keywords
                 .flatMap { search(it.key) }
-                .map { url -> indexedDocuments[url]!! }.toHashSet()
+                .map { indexedDocuments[it]!! }
+                .map { Vectorized(it.url, it.keywords.filter { k -> query.keywords.containsKey(k.key) }) }
+                .toHashSet()
+
+        val queryVector = idfVector(query, matchingDocuments.size)
+        val documentListVector = matchingDocuments.map { idfVector(it, matchingDocuments.size) }
+
+        return matchingDocuments
     }
 
     override fun getCorpusSize(): Int {
         return indexedDocuments.size
+    }
+
+    fun idfVector(vector: Vectorized, matchingSize: Int) : List<Pair<String, Double>> {
+        return vector.keywords.map { (k, v) -> Pair(k, v.frequency * IdfCalculator.compute(getCorpusSize(), matchingSize)) }.toList()
     }
 
 }
