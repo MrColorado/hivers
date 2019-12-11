@@ -1,9 +1,8 @@
-package com.epita.tfidf.scraper
+package com.epita.tfidf.test
+
 import com.epita.tfidf.scraper.impl.BasicScraper
 import org.junit.Test
-
 class BasicScraperTest {
-
     @Test
     fun `test basic scraper use case`() {
         val scraper = BasicScraper()
