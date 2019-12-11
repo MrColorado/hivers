@@ -6,6 +6,7 @@ class Stemming {
             var updatedString = word.removeSuffix("ing")
             updatedString = updatedString.removeSuffix("ed")
             updatedString = updatedString.removeSuffix("s")
+            updatedString = updatedString.removeSuffix("' s")
             if (updatedString.endsWith("ies"))
             {
                 updatedString.removePrefix("ies")
