@@ -4,5 +4,5 @@ import com.epita.tfidf.models.Vectorized
 
 interface Index {
     fun insert(keyword: String, document: Vectorized)
-    fun search(keyword: String) : List<Vectorized>?
+    fun search(query: Vectorized) : Set<Vectorized>?
 }

@@ -5,7 +5,7 @@ import com.epita.tfidf.indexer.core.Indexer
 import com.epita.tfidf.models.Vectorized
 import java.util.concurrent.ConcurrentHashMap
 
-class BasicIndex() : Index{
+class BasicIndex : Index{
 
     private val indexedDocuments: ConcurrentHashMap<String, ArrayList<Vectorized>> = ConcurrentHashMap()
 
@@ -19,8 +19,12 @@ class BasicIndex() : Index{
         }
     }
 
-    override fun search(keyword: String): List<Vectorized>? {
-        return indexedDocuments[keyword]
+    private fun search(keyword: String): List<Vectorized> {
+        return indexedDocuments.getOrDefault(keyword, arrayListOf())
+    }
+
+    override fun search(query: Vectorized) : Set<Vectorized> {
+        return query.keywords.flatMap { search(it.key) }.toHashSet()
     }
 
 }

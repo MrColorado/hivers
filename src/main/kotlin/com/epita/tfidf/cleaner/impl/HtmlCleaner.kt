@@ -6,6 +6,6 @@ import org.jsoup.nodes.Document
 
 class HtmlCleaner : Cleaner {
     override fun compute(document: Document): Cleaned {
-        return Cleaned(document.baseUri(), document.text())
+        return Cleaned(document.baseUri(), document.text().toLowerCase())
     }
 }
