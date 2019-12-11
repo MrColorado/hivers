@@ -12,8 +12,9 @@ abstract class AbstractAspect<BEAN_TYPE> : Aspect<BEAN_TYPE> {
         this.methodName = methodName
     }
 
-    override fun execute(bean: BEAN_TYPE, method: Method, args: Array<out Any>?) {
+    override fun execute(bean: BEAN_TYPE, method: Method, args: Array<out Any>?) : Any?{
         if (methodName == method.name)
-            lambda()
+            return lambda()
+        return null
     }
 }
