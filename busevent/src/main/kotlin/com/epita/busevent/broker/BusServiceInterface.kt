@@ -1,5 +1,7 @@
 package com.epita.busevent.broker
 
+import com.epita.busevent.models.Message
+
 interface BusServiceInterface {
     fun subscribe(url: String, topic: String) : String?
 
@@ -8,6 +10,8 @@ interface BusServiceInterface {
     fun createTopic(name: String) : Boolean
 
     fun deleteTopic(name: String) : Boolean
+
+    fun publish(message: Message)
 
     fun listClients(name: String) : Set<Pair<String, String>>
 

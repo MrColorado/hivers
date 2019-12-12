@@ -2,17 +2,16 @@ package com.epita.busevent.broker
 
 
 import com.epita.busevent.models.Message
+import com.epita.busevent.models.MessageType
 import java.security.MessageDigest
-import java.util.*
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
+import kotlin.random.Random
 
 class BusService : BusServiceInterface {
 
-    private val urlByClient: MutableMap<String, String> = HashMap()
-    private val clientsByTopic: MutableMap<String, MutableSet<String>> = HashMap()
-
-    private val queueTopic: Deque<Message> = ArrayDeque()
+    private val urlByClient: HashMap<String, String> = HashMap()
+    private val clientsByTopic: HashMap<String, HashSet<String>> = HashMap()
 
     private fun hashString(type: String, input: String): String {
         val HEX_CHARS = "0123456789ABCDEF"
@@ -45,6 +44,9 @@ class BusService : BusServiceInterface {
             return false
         }
         clientsByTopic[topic]!!.remove(id)
+        if (clientsByTopic[topic]!!.size == 0) {
+            clientsByTopic.remove(topic)
+        }
         return true
     }
 
@@ -62,6 +64,23 @@ class BusService : BusServiceInterface {
         }
         clientsByTopic.remove(name)
         return true
+    }
+
+    override fun publish(message: Message) {
+        if (message.topic in clientsByTopic) {
+            return
+        }
+        if (message.type == MessageType.BROADCAST) {
+            clientsByTopic[message.topic]!!.map { khttp.post(url = urlByClient[it]!!,
+                json = mapOf("text" to message.content))
+            }
+        }
+        else {
+            val maxSize = clientsByTopic[message.topic]!!.size - 1
+            val position = Random.nextInt(maxSize)
+            val id = clientsByTopic[message.topic]!!.elementAt(position)
+            khttp.post(url = urlByClient[id]!!, json = mapOf("text" to message.content))
+        }
     }
 
     override fun listClients(name: String) : Set<Pair<String, String>> {
