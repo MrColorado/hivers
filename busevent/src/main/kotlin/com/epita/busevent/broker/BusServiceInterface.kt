@@ -1,6 +1,6 @@
 package com.epita.busevent.broker
 
-interface Bus {
+interface BusServiceInterface {
     fun subscribe(url: String, topic: String) : String?
 
     fun unsubscribe(id: String, topic: String) : Boolean

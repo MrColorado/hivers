@@ -1,6 +1,6 @@
 package com.epita.busevent.broker
 
-class BusService : Bus {
+class BusService : BusServiceInterface {
     private val urlByClient: MutableMap<String, String> = HashMap()
     private val clientsByTopic: MutableMap<String, MutableList<String>> = HashMap()
 
