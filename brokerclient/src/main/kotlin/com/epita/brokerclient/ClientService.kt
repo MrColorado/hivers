@@ -10,7 +10,7 @@ class ClientService : ClientServiceInterface {
     constructor() {
         this.app = Javalin.create()
         app.start()
-        this.url = "localhost:" + app.port()
+        this.url = "localhost:" + app.port() + "/api/client"
     }
 
     fun finalize() {
