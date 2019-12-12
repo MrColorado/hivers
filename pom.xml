@@ -21,7 +21,7 @@
         <junit.version>4.12</junit.version>
         <jsoup.version>1.12.1</jsoup.version>
         <javalin.version>3.6.0</javalin.version>
-        <jackson.version>2.9.4</jackson.version>
+        <jackson.version>2.9.7</jackson.version>
         <khttp.version>0.1.0</khttp.version>
         <sl4j.version>1.7.28</sl4j.version>
     </properties>
@@ -54,7 +54,6 @@
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-reflect</artifactId>
                 <version>${kotlin.reflect.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.jsoup</groupId>

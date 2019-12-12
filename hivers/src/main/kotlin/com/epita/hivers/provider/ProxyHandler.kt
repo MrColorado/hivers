@@ -27,7 +27,7 @@ class ProxyHandler<BEAN_TYPE> : InvocationHandler {
             method.invoke(bean)
         }
         else {
-            method.invoke(bean, args)
+            method.invoke(bean, *args)
         }
         aspectList.stream().filter { aspect -> aspect is After }.forEach { aspect -> aspect.execute(bean, method, args) }
         return result

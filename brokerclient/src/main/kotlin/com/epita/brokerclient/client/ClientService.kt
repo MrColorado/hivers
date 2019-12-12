@@ -23,8 +23,9 @@ class ClientService(private val serverUrl: String) : ClientServiceInterface, Log
 
     init {
         this.app = Javalin.create()
-            .get("api//client", clientController.getMessage)
-        this.url = "localhost:" + app.port() + "/api/client"
+        this.app.start(7002)
+            .get("api/client", clientController.getMessage)
+        this.url = "http://localhost:" + app.port() + "/api/client"
     }
 
     fun finalize() {
