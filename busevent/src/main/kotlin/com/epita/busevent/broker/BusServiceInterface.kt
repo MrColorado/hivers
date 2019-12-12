@@ -9,5 +9,7 @@ interface BusServiceInterface {
 
     fun deleteTopic(name: String) : Boolean
 
-    fun listClients() : List<String>
+    fun listClients(name: String) : Set<Pair<String, String>>
+
+    fun listClients() : Set<Pair<String, String>>
 }
