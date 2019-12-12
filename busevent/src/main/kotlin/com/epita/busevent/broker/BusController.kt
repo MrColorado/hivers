@@ -1,10 +1,17 @@
 package com.epita.busevent.broker
 
+import com.epita.busevent.LoggerInterface
 import io.javalin.http.Context
 import com.epita.busevent.models.Topic
 import io.javalin.http.Handler
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import kotlin.math.log
 
-class BusController(private val service: BusServiceInterface) : BusControllerInterface {
+class BusController(private val service: BusServiceInterface) : BusControllerInterface, LoggerInterface {
+
+    private val logger = LoggerFactory.getLogger(this.javaClass.name)
+
     override val createTopic: (Context) -> Unit = {
         val obj = it.bodyAsClass(Topic::class.java)
         val result = service.createTopic(obj.name)
@@ -34,5 +41,9 @@ class BusController(private val service: BusServiceInterface) : BusControllerInt
 
     override val publish: (Context) -> Unit = {
         it.html("publish")
+    }
+
+    override fun getLogger(): Logger {
+        return logger
     }
 }

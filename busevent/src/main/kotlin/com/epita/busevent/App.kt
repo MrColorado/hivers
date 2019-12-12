@@ -10,7 +10,6 @@ import io.javalin.Javalin
 fun main() {
     val app = Javalin.create()
 
-
     val hivers = Hivers {
         bean(BusServiceInterface::class.java, BusService())
         bean(BusControllerInterface::class.java, BusController(instanceOf(BusServiceInterface::class.java)))
@@ -26,5 +25,4 @@ fun main() {
         .post("/subscribe", busController.subscribe)
         .post("/unsubscribe", busController.unsubscribe)
         .post("/publish", busController.publish)
-
 }

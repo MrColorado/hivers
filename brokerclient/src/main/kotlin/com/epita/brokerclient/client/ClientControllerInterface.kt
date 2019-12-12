@@ -1,4 +1,4 @@
-package com.epita.brokerclient
+package com.epita.brokerclient.client
 
 import io.javalin.http.Context
 
