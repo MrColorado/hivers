@@ -1,6 +1,7 @@
 package com.epita.brokerclient
 
 import com.epita.brokerclient.models.MessageType
+import com.epita.hivers.core.Hivers
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.javalin.Javalin
@@ -12,9 +13,15 @@ class ClientService : ClientServiceInterface {
     private val app : Javalin
     private val serverUrl: String
 
+    private val hivers = Hivers {
+        bean(ClientControllerInterface::class.java, ClientController())
+    }
+
+    private val clientController = hivers.instanceOf(ClientControllerInterface::class.java)
+
     constructor(serverUrl: String) {
         this.app = Javalin.create()
-        app.start()
+            .get("api//client", clientController.getMessage)
         this.url = "localhost:" + app.port() + "/api/client"
         this.serverUrl = serverUrl
     }

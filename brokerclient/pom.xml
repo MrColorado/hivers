@@ -41,6 +41,15 @@
             <groupId>io.javalin</groupId>
             <artifactId>javalin</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.epita</groupId>
+            <artifactId>hivers</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
