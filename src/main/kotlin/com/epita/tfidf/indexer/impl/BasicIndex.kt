@@ -3,7 +3,10 @@ package com.epita.tfidf.indexer.impl
 import com.epita.tfidf.idf.impl.IdfCalculator
 import com.epita.tfidf.indexer.core.Index
 import com.epita.tfidf.indexer.core.Indexer
+import com.epita.tfidf.models.DocumentCosine
+import com.epita.tfidf.models.TfIdfByWord
 import com.epita.tfidf.models.Vectorized
+import com.epita.tfidf.utils.Calculus
 import java.util.concurrent.ConcurrentHashMap
 
 class BasicIndex : Index {
@@ -25,25 +28,26 @@ class BasicIndex : Index {
         return urlsForKeyword.getOrDefault(keyword, mutableSetOf())
     }
 
-    override fun search(query: Vectorized) : Set<Vectorized> {
+    override fun search(query: Vectorized) : List<DocumentCosine> {
         val matchingDocuments = query.keywords
                 .flatMap { search(it.key) }
                 .map { indexedDocuments[it]!! }
                 .map { Vectorized(it.url, it.keywords.filter { k -> query.keywords.containsKey(k.key) }) }
                 .toHashSet()
 
-        val queryVector = idfVector(query, matchingDocuments.size)
-        val documentListVector = matchingDocuments.map { idfVector(it, matchingDocuments.size) }
+        val queryVector = Calculus.normalize(idfVector(query, matchingDocuments.size))
+        val documentListVector = matchingDocuments.map { Pair(it.url, Calculus.normalize(idfVector(it, matchingDocuments.size))) }
 
-        return matchingDocuments
+        return documentListVector.map { DocumentCosine(it.first, Calculus.cosineSimilarity(queryVector, it.second)) }
+                .sortedBy { it.cosine }
     }
 
     override fun getCorpusSize(): Int {
         return indexedDocuments.size
     }
 
-    fun idfVector(vector: Vectorized, matchingSize: Int) : List<Pair<String, Double>> {
-        return vector.keywords.map { (k, v) -> Pair(k, v.frequency * IdfCalculator.compute(getCorpusSize(), matchingSize)) }.toList()
+    fun idfVector(vector: Vectorized, matchingSize: Int) : List<TfIdfByWord> {
+        return vector.keywords.map { (k, v) -> TfIdfByWord(v.frequency * IdfCalculator.compute(getCorpusSize(), matchingSize), k) }.toList()
     }
 
 }
