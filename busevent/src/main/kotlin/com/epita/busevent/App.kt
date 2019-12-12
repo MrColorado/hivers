@@ -16,7 +16,15 @@ fun main() {
         bean(BusControllerInterface::class.java, BusController(instanceOf(BusServiceInterface::class.java)))
     }
 
+    val busController = hivers.instanceOf(BusControllerInterface::class.java)
+
     app.start(7000)
-    app.get("") { context -> context.html("Hello!") }
-    app.get("/rest", hivers.instanceOf(BusControllerInterface::class.java).helloBus)
+        .get("") { context -> context.html("Hello!") }
+        .post("/topics", busController.createTopic)
+        .delete("/topics", busController.deleteTopic)
+        .get("/clients", busController.listClients)
+        .post("/subscribe", busController.subscribe)
+        .post("/unsubscribe", busController.unsubscribe)
+        .post("/publish", busController.publish)
+
 }
