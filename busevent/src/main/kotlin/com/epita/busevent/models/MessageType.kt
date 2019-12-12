@@ -1,6 +1,6 @@
 package com.epita.busevent.models
 
-enum class MessageType {
-    BROADCAST,
-    ONCE,
+enum class MessageType(type: String) {
+    BROADCAST("BROADCAST"),
+    ONCE("ONCE"),
 }

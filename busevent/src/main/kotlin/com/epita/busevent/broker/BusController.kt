@@ -1,8 +1,11 @@
 package com.epita.busevent.broker
 
 import com.epita.busevent.LoggerInterface
+import com.epita.busevent.models.Message
+import com.epita.busevent.models.Subscribe
 import io.javalin.http.Context
 import com.epita.busevent.models.Topic
+import com.epita.busevent.models.UnSubscribe
 import io.javalin.http.Handler
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -23,7 +26,9 @@ class BusController(private val service: BusServiceInterface) : BusControllerInt
     }
 
     override val deleteTopic: (Context) -> Unit = {
-        it.html("delete topic")
+        val obj = it.bodyAsClass(Topic::class.java)
+        val result = service.deleteTopic(obj.name)
+        it.json(result)
     }
 
     override val listClients: (Context) -> Unit = {
@@ -32,15 +37,26 @@ class BusController(private val service: BusServiceInterface) : BusControllerInt
     }
 
     override val subscribe: (Context) -> Unit = {
-        it.html("subscribe")
+        val obj = it.bodyAsClass(Subscribe::class.java)
+        val id = service.subscribe(obj.url, obj.topic)
+        if (id == null) {
+            it.status(404)
+        }
+        else {
+            it.json(id)
+        }
     }
 
     override val unsubscribe: (Context) -> Unit = {
-        it.html("unsubscribe")
+        val obj = it.bodyAsClass(UnSubscribe::class.java)
+        val result = service.unsubscribe(obj.url, obj.topic)
+        it.json(result)
     }
 
     override val publish: (Context) -> Unit = {
-        it.html("publish")
+        val obj = it.bodyAsClass(Message::class.java)
+        service.publish(obj)
+        it.status(200)
     }
 
     override fun getLogger(): Logger {
