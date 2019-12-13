@@ -12,6 +12,10 @@
         <module>tfidf</module>
         <module>busevent</module>
         <module>brokerclient</module>
+        <module>domain</module>
+        <module>crawler</module>
+        <module>indexer</module>
+        <module>index</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
