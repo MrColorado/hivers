@@ -16,7 +16,10 @@ import java.net.http.HttpResponse
 
 class BrokerClient(private val serverUrl: String) : BrokerClientInterface, ClientControllerInterface {
     private val url : String
-    private val app : Javalin = Javalin.create()
+    private val app : Javalin = Javalin.create { config ->
+        config.requestCacheSize = 16777216
+    }
+
     private val logger = LoggerFactory.getLogger(this.javaClass.name)
 
     private val subscribers : MutableMap<String, Subscriber> = HashMap()

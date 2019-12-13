@@ -8,3 +8,4 @@
 ### Events
 
 - crawled-event: When document is crawled
+- not-crawled-event: When crawler failed to crawl url

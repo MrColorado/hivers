@@ -18,6 +18,7 @@ class Scraper(val brokerClient: BrokerClientInterface, val publisher: Publisher)
         toVisitLinks.addAll(Constants.urls)
         CrawlerInitSubscriber(brokerClient, "crawler-init") { id -> initCrawler(id) }
         CrawledSubscriber(brokerClient, "crawled-event") { url, urls ->  crawledEvent(url, urls) }
+        CrawlerInitSubscriber(brokerClient, "not-crawled-event") { url -> notCrawlerEvent(url) }
     }
 
     private fun startCrawler() {
@@ -35,7 +36,11 @@ class Scraper(val brokerClient: BrokerClientInterface, val publisher: Publisher)
     private fun crawledEvent(url: String, urls: List<String>) {
         visitedLinks.add(url)
         toVisitLinks.addAll(urls)
-        println(url)
+        startCrawler()
+    }
+
+    private fun notCrawlerEvent(url: String) {
+        visitedLinks.add(url)
         startCrawler()
     }
 }

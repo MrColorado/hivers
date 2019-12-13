@@ -18,12 +18,12 @@ fun main() {
 
     val crawlerId = UUID.randomUUID().toString()
 
-    publisher.publish("crawler-init", CrawlerInitCommand(crawlerId),
-        MessageType.BROADCAST, CrawlerInitCommand::class.java)
-
-    val crawlerSubscriber = CrawlerSubscriber(
+    CrawlerSubscriber(
         hivers.instanceOf(BrokerClientInterface::class.java),
         "crawl-url",
         publisher
     )
+
+    publisher.publish("crawler-init", CrawlerInitCommand(crawlerId),
+        MessageType.BROADCAST, CrawlerInitCommand::class.java)
 }

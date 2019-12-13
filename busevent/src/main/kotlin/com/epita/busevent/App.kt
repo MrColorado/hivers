@@ -8,7 +8,9 @@ import com.epita.hivers.core.Hivers
 import io.javalin.Javalin
 
 fun main() {
-    val app = Javalin.create()
+    val app = Javalin.create { config ->
+        config.requestCacheSize = 16777216
+    }
 
     val hivers = Hivers {
         bean(BusServiceInterface::class.java, BusService())
