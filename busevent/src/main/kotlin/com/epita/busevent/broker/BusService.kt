@@ -6,6 +6,10 @@ import com.epita.busevent.models.Message
 import com.epita.busevent.models.MessageType
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
 import java.security.MessageDigest
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
@@ -15,6 +19,16 @@ class BusService : BusServiceInterface, LoggerInterface {
     private val urlByClient: HashMap<String, String> = HashMap()
     private val clientsByTopic: HashMap<String, HashSet<String>> = HashMap()
     private val logger = LoggerFactory.getLogger(this.javaClass.name)
+    private val client = HttpClient.newBuilder().build()
+
+    private fun postJson(url: String, jsonString: String) : HttpResponse<String> {
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create(url))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(jsonString)).build()
+
+        return client.send(request, HttpResponse.BodyHandlers.ofString())
+    }
 
     private fun hashString(type: String, input: String): String {
         val HEX_CHARS = "0123456789ABCDEF"
@@ -70,19 +84,20 @@ class BusService : BusServiceInterface, LoggerInterface {
     }
 
     override fun publish(message: Message) {
-        if (message.topic in clientsByTopic) {
+        if (message.topic !in clientsByTopic) {
             return
         }
+        val request: HttpRequest
         if (message.type == MessageType.BROADCAST) {
-            clientsByTopic[message.topic]!!.map { khttp.post(url = urlByClient[it]!!,
-                json = mapOf("text" to message.content))
+            clientsByTopic[message.topic]!!.map {
+                postJson(urlByClient[it]!!, message.content)
             }
         }
         else {
             val maxSize = clientsByTopic[message.topic]!!.size - 1
             val position = Random.nextInt(maxSize)
             val id = clientsByTopic[message.topic]!!.elementAt(position)
-            khttp.post(url = urlByClient[id]!!, json = mapOf("text" to message.content))
+            postJson(urlByClient[id]!!, message.content)
         }
     }
 
