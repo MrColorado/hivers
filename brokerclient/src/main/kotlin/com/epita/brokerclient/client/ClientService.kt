@@ -9,6 +9,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.javalin.Javalin
 import org.slf4j.LoggerFactory
+import java.net.ServerSocket
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -29,7 +30,8 @@ class ClientService(private val serverUrl: String) : ClientServiceInterface {
 
     init {
         this.app = Javalin.create()
-        this.app.start(7002)
+        val port = ServerSocket(0).use { it.localPort }
+        this.app.start(port)
             .post("api/client", clientController.getMessage)
         this.url = "http://localhost:" + app.port() + "/api/client"
     }
