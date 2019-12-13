@@ -1,4 +1,4 @@
-package com.epita.crawler.impl
+package com.epita.crawler.subscribers
 
 import com.epita.models.BrokerClientInterface
 import com.epita.models.MessageType

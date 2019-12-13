@@ -1,7 +1,7 @@
 package com.epita.crawler
 
 import com.epita.brokerclient.client.BrokerClient
-import com.epita.crawler.impl.CrawlerSubscriber
+import com.epita.crawler.subscribers.CrawlerSubscriber
 import com.epita.hivers.core.Hivers
 import com.epita.models.BrokerClientInterface
 import com.epita.models.MessageType
