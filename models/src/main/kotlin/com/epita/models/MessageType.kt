@@ -1,4 +1,4 @@
-package com.epita.brokerclient.models
+package com.epita.models
 
 enum class MessageType {
     BROADCAST,
