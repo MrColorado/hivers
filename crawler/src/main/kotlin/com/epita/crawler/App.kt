@@ -24,6 +24,6 @@ fun main() {
         publisher
     )
 
-    publisher.publish("crawler-init", CrawlerInitCommand(crawlerId),
+    publisher.publish("crawler-init-command", CrawlerInitCommand(crawlerId),
         MessageType.BROADCAST, CrawlerInitCommand::class.java)
 }

@@ -1,11 +1,11 @@
 package com.epita.domain.tfidf.cleaner.impl
 
-import com.epita.domain.tfidf.cleaner.core.Cleaner
+import com.epita.domain.tfidf.cleaner.core.CleanerServiceInterface
 import com.epita.domain.tfidf.models.Cleaned
-import org.jsoup.nodes.Document
+import com.epita.domain.tfidf.models.DocumentWithUrl
 
-class HtmlCleaner : Cleaner {
-    override fun compute(document: Document): Cleaned {
-        return Cleaned(document.baseUri(), document.text().toLowerCase())
+class HtmlCleaner : CleanerServiceInterface {
+    override fun compute(document: DocumentWithUrl): Cleaned {
+        return Cleaned(document.url, document.text.toLowerCase())
     }
 }

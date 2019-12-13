@@ -1,4 +1,4 @@
-package com.epita.domain.tfidf.impl
+package com.epita.domain.tfidf.utils
 
 import java.lang.Math.log
 

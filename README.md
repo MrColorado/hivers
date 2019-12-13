@@ -2,8 +2,9 @@
 
 ### Commands
 
-- crawler-init: When crawler spawn
-- crawl-url: Tell crawler to crawl url
+- crawler-init-command: When crawler spawn
+- crawl-url-command: Tell crawler to crawl url
+- tokenizer-command: Ask to tokenize document
 
 ### Events
 
