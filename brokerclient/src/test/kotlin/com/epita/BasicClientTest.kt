@@ -1,6 +1,6 @@
 package com.epita
 
-import com.epita.brokerclient.ClientService
+import com.epita.brokerclient.client.ClientService
 import org.junit.Test
 
 class BasicClientTest {

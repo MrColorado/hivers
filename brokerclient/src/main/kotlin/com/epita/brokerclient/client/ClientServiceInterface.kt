@@ -4,7 +4,7 @@ import com.epita.brokerclient.models.MessageType
 
 
 interface ClientServiceInterface {
-    fun subscribe(url: String, topic: String) : String?
+    fun subscribe(topic: String) : String?
 
     fun unsubscribe(id: String) : Boolean
 
