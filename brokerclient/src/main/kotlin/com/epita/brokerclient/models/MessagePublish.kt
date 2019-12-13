@@ -1,3 +1,3 @@
 package com.epita.brokerclient.models
 
-data class MessagePublish(val topic: String, val msg: Any, val msgType: MessageType)
+data class MessagePublish(val content: String, val topic: String, val type: MessageType)

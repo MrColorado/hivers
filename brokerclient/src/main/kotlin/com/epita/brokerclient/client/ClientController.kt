@@ -9,5 +9,6 @@ class ClientController : ClientControllerInterface {
 
     override val getMessage: (Context) -> Unit = {
         val body = it.body()
+        println(body)
     }
 }

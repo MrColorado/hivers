@@ -30,7 +30,7 @@ class ClientService(private val serverUrl: String) : ClientServiceInterface {
     init {
         this.app = Javalin.create()
         this.app.start(7002)
-            .get("api/client", clientController.getMessage)
+            .post("api/client", clientController.getMessage)
         this.url = "http://localhost:" + app.port() + "/api/client"
     }
 
@@ -90,8 +90,9 @@ class ClientService(private val serverUrl: String) : ClientServiceInterface {
 
     override fun publish(topic: String, msg: Any, msgType: MessageType) : Boolean {
         val mapper = jacksonObjectMapper()
-        val message = mapper.writeValueAsString(MessagePublish(topic, msg, msgType))
-        val res =  postJson("unsubscribe", message)
+        val content = mapper.writeValueAsString(msg)
+        val message = mapper.writeValueAsString(MessagePublish(content, topic, msgType))
+        val res =  postJson("publish", message)
         return res.statusCode() == 200
     }
 
