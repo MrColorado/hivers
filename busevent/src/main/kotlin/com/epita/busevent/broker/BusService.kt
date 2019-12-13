@@ -2,8 +2,9 @@ package com.epita.busevent.broker
 
 
 import com.epita.busevent.LoggerInterface
-import com.epita.busevent.models.Message
-import com.epita.busevent.models.MessageType
+import com.epita.models.Message
+import com.epita.models.MessageString
+import com.epita.models.MessageType
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -67,21 +68,21 @@ class BusService : BusServiceInterface, LoggerInterface {
         return true
     }
 
-    override fun publish(message: Message) {
+    override fun publish(message: MessageString) {
         if (message.topic !in clientsByTopic) {
             return
         }
-        val request: HttpRequest
-        if (message.type == MessageType.BROADCAST) {
+
+        if (message.msgType == MessageType.BROADCAST) {
             clientsByTopic[message.topic]!!.map {
-                postJson(urlByClient[it]!!, message.content)
+                postJson(urlByClient[it]!!, message.json)
             }
         }
         else {
-            val maxSize = clientsByTopic[message.topic]!!.size - 1
+            val maxSize = clientsByTopic[message.topic]!!.size
             val position = Random.nextInt(maxSize)
             val id = clientsByTopic[message.topic]!!.elementAt(position)
-            postJson(urlByClient[id]!!, message.content)
+            postJson(urlByClient[id]!!, message.json)
         }
     }
 

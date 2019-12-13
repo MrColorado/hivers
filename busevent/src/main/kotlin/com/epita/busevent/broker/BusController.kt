@@ -1,11 +1,12 @@
 package com.epita.busevent.broker
 
 import com.epita.busevent.LoggerInterface
-import com.epita.busevent.models.Message
 import com.epita.busevent.models.Subscribe
 import io.javalin.http.Context
-import com.epita.busevent.models.Topic
 import com.epita.busevent.models.UnSubscribe
+import com.epita.models.Message
+import com.epita.models.MessageString
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -36,7 +37,7 @@ class BusController(private val service: BusServiceInterface) : BusControllerInt
     }
 
     override val publish: (Context) -> Unit = {
-        val obj = it.bodyAsClass(Message::class.java)
+        val obj = it.bodyAsClass(MessageString::class.java)
         service.publish(obj)
         it.status(200)
     }

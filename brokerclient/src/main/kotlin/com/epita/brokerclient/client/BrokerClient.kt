@@ -2,10 +2,7 @@ package com.epita.brokerclient.client
 
 import com.epita.brokerclient.models.UrlWithTopic
 import com.epita.brokerclient.models.*
-import com.epita.models.BrokerClientInterface
-import com.epita.models.Message
-import com.epita.models.MessageType
-import com.epita.models.Subscriber
+import com.epita.models.*
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.javalin.Javalin
@@ -28,10 +25,12 @@ class BrokerClient(private val serverUrl: String) : BrokerClientInterface, Clien
         val body = it.body()
 
         val mapper = jacksonObjectMapper()
-        val msg = mapper.readValue<Message>(body)
+        val msg = mapper.readValue<MessageString>(body)
 
         val subscriber = subscribers.get(msg.topic)
-        val obj = mapper.readValue(msg.json, msg.objectClass)
+
+
+        val obj = mapper.readValue(msg.json, Class.forName(msg.objectClass))
         subscriber?.handle(obj)
     }
 
@@ -105,10 +104,10 @@ class BrokerClient(private val serverUrl: String) : BrokerClientInterface, Clien
         return res.statusCode() == 200
     }
 
-    override fun <MSG_TYPE> publish(topic: String, msg: MSG_TYPE, messageType: MessageType) : Boolean {
+    override fun <MSG_TYPE> publish(topic: String, msg: MSG_TYPE, messageType: MessageType, classType: Class<MSG_TYPE>) : Boolean {
         val mapper = jacksonObjectMapper()
         val content = mapper.writeValueAsString(msg)
-        val message = mapper.writeValueAsString(MessagePublish(content, topic, messageType))
+        val message = mapper.writeValueAsString(MessageString(messageType, content, classType.toString(), topic))
         val res =  postJson("publish", message)
         return res.statusCode() == 200
     }

@@ -1,13 +1,14 @@
 package com.epita.busevent.broker
 
-import com.epita.busevent.models.Message
+import com.epita.models.MessageString
+
 
 interface BusServiceInterface {
     fun subscribe(url: String, topic: String) : String?
 
     fun unsubscribe(id: String, topic: String) : Boolean
 
-    fun publish(message: Message)
+    fun publish(message: MessageString)
 
     fun listClients(name: String) : Set<Pair<String, String>>
 
