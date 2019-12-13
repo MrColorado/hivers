@@ -9,7 +9,6 @@
     <name>com.epita searchengine</name>
     <modules>
         <module>hivers</module>
-        <module>tfidf</module>
         <module>busevent</module>
         <module>brokerclient</module>
         <module>domain</module>
