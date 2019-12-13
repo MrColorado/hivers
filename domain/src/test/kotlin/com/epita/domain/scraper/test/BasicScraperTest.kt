@@ -1,15 +1,10 @@
 package com.epita.domain.scraper.test
 
-import com.epita.domain.scraper.impl.BasicScraper
+import com.epita.domain.scraper.Scraper
 import org.junit.Test
 class BasicScraperTest {
     @Test
     fun `test basic scraper use case`() {
-        val scraper = BasicScraper()
-        scraper.startCrawlers(false)
-        // Wait a little to scrap
-        Thread.sleep(10)
-        val document = BasicScraper.scrapedDocument.peek()
-        assert(null != document)
+
     }
 }

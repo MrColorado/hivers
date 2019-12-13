@@ -41,7 +41,7 @@ class CrawlerSubscriber : Subscriber {
                     hrefList.add(href)
                 }
                 val crawledEvent = CrawledEvent(url, this, hrefList)
-                publisher.publish("crawled-event", crawledEvent, MessageType.BROADCAST)
+                publisher.publish("crawled-event", crawledEvent, MessageType.BROADCAST, CrawledEvent::class.java)
             }
         }
         catch (e : Exception) {
