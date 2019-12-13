@@ -5,6 +5,7 @@ import com.epita.busevent.LoggerInterface
 import com.epita.models.Message
 import com.epita.models.MessageString
 import com.epita.models.MessageType
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -68,21 +69,20 @@ class BusService : BusServiceInterface, LoggerInterface {
         return true
     }
 
-    override fun publish(message: MessageString) {
+    override fun publish(message: MessageString, json: String) {
         if (message.topic !in clientsByTopic) {
             return
         }
-
         if (message.msgType == MessageType.BROADCAST) {
             clientsByTopic[message.topic]!!.map {
-                postJson(urlByClient[it]!!, message.json)
+                postJson(urlByClient[it]!!, json)
             }
         }
         else {
             val maxSize = clientsByTopic[message.topic]!!.size
             val position = Random.nextInt(maxSize)
             val id = clientsByTopic[message.topic]!!.elementAt(position)
-            postJson(urlByClient[id]!!, message.json)
+            postJson(urlByClient[id]!!, json)
         }
     }
 

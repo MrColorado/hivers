@@ -5,14 +5,12 @@ import com.epita.models.BrokerClientInterface
 import com.epita.models.MessageType
 import com.epita.models.Publisher
 import com.epita.models.Subscriber
-
-data class TestObject(val msg: String)
+import com.epita.models.test.TestObject
 
 class TestSubscriber(brokerClient: BrokerClientInterface, topic: String)
     : Subscriber(brokerClient, topic) {
     override fun <CLASS> handle(message: CLASS) {
-
-        println(message as TestObject)
+        println((message as TestObject).msg)
     }
 }
 

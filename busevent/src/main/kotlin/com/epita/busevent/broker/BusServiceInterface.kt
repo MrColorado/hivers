@@ -8,7 +8,7 @@ interface BusServiceInterface {
 
     fun unsubscribe(id: String, topic: String) : Boolean
 
-    fun publish(message: MessageString)
+    fun publish(message: MessageString, json: String)
 
     fun listClients(name: String) : Set<Pair<String, String>>
 

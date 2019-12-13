@@ -38,7 +38,7 @@ class BusController(private val service: BusServiceInterface) : BusControllerInt
 
     override val publish: (Context) -> Unit = {
         val obj = it.bodyAsClass(MessageString::class.java)
-        service.publish(obj)
+        service.publish(obj, it.body())
         it.status(200)
     }
 

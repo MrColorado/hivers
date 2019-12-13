@@ -107,7 +107,7 @@ class BrokerClient(private val serverUrl: String) : BrokerClientInterface, Clien
     override fun <MSG_TYPE> publish(topic: String, msg: MSG_TYPE, messageType: MessageType, classType: Class<MSG_TYPE>) : Boolean {
         val mapper = jacksonObjectMapper()
         val content = mapper.writeValueAsString(msg)
-        val message = mapper.writeValueAsString(MessageString(messageType, content, classType.toString(), topic))
+        val message = mapper.writeValueAsString(MessageString(messageType, content, classType.name, topic))
         val res =  postJson("publish", message)
         return res.statusCode() == 200
     }
