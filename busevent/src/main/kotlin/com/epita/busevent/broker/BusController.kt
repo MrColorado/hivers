@@ -6,10 +6,8 @@ import com.epita.busevent.models.Subscribe
 import io.javalin.http.Context
 import com.epita.busevent.models.Topic
 import com.epita.busevent.models.UnSubscribe
-import io.javalin.http.Handler
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import kotlin.math.log
 
 class BusController(private val service: BusServiceInterface) : BusControllerInterface, LoggerInterface {
 

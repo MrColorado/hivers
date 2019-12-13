@@ -2,6 +2,7 @@ package com.epita
 
 import com.epita.brokerclient.client.ClientService
 import com.epita.brokerclient.models.MessageType
+import com.epita.brokerclient.models.Topic
 import org.junit.Test
 
 class BasicClientTest {
@@ -19,7 +20,7 @@ class BasicClientTest {
             val clients = clientService.listClients()
             println(clients)
 
-            value = clientService.publish("toto", "kek", MessageType.BROADCAST)
+            value = clientService.publish("toto", Topic("test"), MessageType.BROADCAST)
             println(value)
 
             value = clientService.deleteTopic("toto")
