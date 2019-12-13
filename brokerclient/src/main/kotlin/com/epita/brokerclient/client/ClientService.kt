@@ -1,6 +1,5 @@
 package com.epita.brokerclient.client
 
-import com.epita.brokerclient.LoggerInterface
 import com.epita.brokerclient.models.UrlWithTopic
 import com.epita.brokerclient.models.MessageType
 import com.epita.brokerclient.models.Name
@@ -8,7 +7,6 @@ import com.epita.hivers.core.Hivers
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.javalin.Javalin
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
 import java.net.http.HttpClient
@@ -16,7 +14,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
 
-class ClientService(private val serverUrl: String) : ClientServiceInterface, LoggerInterface {
+class ClientService(private val serverUrl: String) : ClientServiceInterface {
 
     private val url : String
     private val app : Javalin
@@ -90,9 +88,5 @@ class ClientService(private val serverUrl: String) : ClientServiceInterface, Log
 
         val state = mapper.readValue<Set<Pair<String, String>>>(clients)
         return state
-    }
-
-    override fun getLogger(): Logger {
-        return logger
     }
 }
