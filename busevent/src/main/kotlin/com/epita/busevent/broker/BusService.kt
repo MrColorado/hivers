@@ -49,7 +49,7 @@ class BusService : BusServiceInterface, LoggerInterface {
         val id = hashString("SHA-1", url)
         urlByClient[id] = url
         if (topic !in clientsByTopic) {
-            return null
+            clientsByTopic[topic] = HashSet()
         }
         clientsByTopic[topic]!!.add(id)
         return id
@@ -64,22 +64,6 @@ class BusService : BusServiceInterface, LoggerInterface {
         if (clientsByTopic[topic]!!.size == 0) {
             clientsByTopic.remove(topic)
         }
-        return true
-    }
-
-    override fun createTopic(name: String) : Boolean {
-        if (name in clientsByTopic) {
-            return false
-        }
-        clientsByTopic[name] = HashSet()
-        return true
-    }
-
-    override fun deleteTopic(name: String) : Boolean {
-        if (name !in clientsByTopic) {
-            return false
-        }
-        clientsByTopic.remove(name)
         return true
     }
 

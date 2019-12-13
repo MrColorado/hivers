@@ -19,8 +19,6 @@ fun main() {
 
     app.start(7000)
         .get("") { context -> context.html("Hello!") }
-        .post("/topics", busController.createTopic)
-        .delete("/topics", busController.deleteTopic)
         .get("/clients", busController.listClients)
         .post("/subscribe", busController.subscribe)
         .post("/unsubscribe", busController.unsubscribe)

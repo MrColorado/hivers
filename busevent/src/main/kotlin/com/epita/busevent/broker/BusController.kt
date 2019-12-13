@@ -13,22 +13,6 @@ class BusController(private val service: BusServiceInterface) : BusControllerInt
 
     private val logger = LoggerFactory.getLogger(this.javaClass.name)
 
-    override val createTopic: (Context) -> Unit = {
-        val obj = it.bodyAsClass(Topic::class.java)
-        val result = service.createTopic(obj.name)
-        it.json(result)
-    }
-
-    override val helloBus: (Context) -> Unit = {
-        it.html("Hello from Bus")
-    }
-
-    override val deleteTopic: (Context) -> Unit = {
-        val obj = it.bodyAsClass(Topic::class.java)
-        val result = service.deleteTopic(obj.name)
-        it.json(result)
-    }
-
     override val listClients: (Context) -> Unit = {
         val clients = service.listClients()
         it.json(clients)
