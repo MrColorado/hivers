@@ -1,13 +1,15 @@
 package com.epita.brokerclient.client
 
 import com.epita.brokerclient.models.UrlWithTopic
-import com.epita.brokerclient.models.MessageType
-import com.epita.brokerclient.models.Name
 import com.epita.brokerclient.models.*
-import com.epita.hivers.core.Hivers
+import com.epita.models.BrokerClientInterface
+import com.epita.models.Message
+import com.epita.models.MessageType
+import com.epita.models.Subscriber
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.javalin.Javalin
+import io.javalin.http.Context
 import org.slf4j.LoggerFactory
 import java.net.ServerSocket
 import java.net.URI
@@ -15,30 +17,35 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
-
-class ClientService(private val serverUrl: String) : ClientServiceInterface {
-
+class BrokerClient(private val serverUrl: String) : BrokerClientInterface, ClientControllerInterface {
     private val url : String
-    private val app : Javalin
+    private val app : Javalin = Javalin.create()
     private val logger = LoggerFactory.getLogger(this.javaClass.name)
 
-    private val hivers = Hivers {
-        bean(ClientControllerInterface::class.java, ClientController())
+    private val subscribers : MutableMap<String, Subscriber> = HashMap()
+
+    override val getMessage: (Context) -> Unit = {
+        val body = it.body()
+
+        val mapper = jacksonObjectMapper()
+        val msg = mapper.readValue<Message>(body)
+
+        val subscriber = subscribers.get(msg.topic)
+        val obj = mapper.readValue(msg.json, msg.objectClass)
+        subscriber?.handle(obj)
     }
 
-    private val clientController = hivers.instanceOf(ClientControllerInterface::class.java)
-
     init {
-        this.app = Javalin.create()
         val port = ServerSocket(0).use { it.localPort }
         this.app.start(port)
-            .post("api/client", clientController.getMessage)
+            .post("api/client", this.getMessage)
         this.url = "http://localhost:" + app.port() + "/api/client"
     }
 
     fun finalize() {
         app.stop()
     }
+
 
     private fun getJson(endpoint: String) : HttpResponse<String> {
         val client = HttpClient.newBuilder().build()
@@ -76,39 +83,33 @@ class ClientService(private val serverUrl: String) : ClientServiceInterface {
         return response
     }
 
-    override fun subscribe(topic: String) : String? {
+    override fun subscribe(topic: String, subscriber: Subscriber) : String? {
+        subscribers[topic] = subscriber
         val mapper = jacksonObjectMapper()
         val message = mapper.writeValueAsString(UrlWithTopic(url, topic))
         val res =  postJson("subscribe", message)
         return res.body()
     }
 
-    override fun unsubscribe(id: String) : Boolean {
+    override fun unsubscribe(topic: String, id: String) : Boolean {
+        val subscriber = subscribers.get(topic)
+        if (subscriber?.getId() == id) {
+            subscribers.remove(topic)
+        } else {
+            return false
+        }
+
         val mapper = jacksonObjectMapper()
         val message = mapper.writeValueAsString(Id(id))
         val res =  postJson("unsubscribe", message)
         return res.statusCode() == 200
     }
 
-    override fun publish(topic: String, msg: Any, msgType: MessageType) : Boolean {
+    override fun <MSG_TYPE> publish(topic: String, msg: MSG_TYPE, messageType: MessageType) : Boolean {
         val mapper = jacksonObjectMapper()
         val content = mapper.writeValueAsString(msg)
-        val message = mapper.writeValueAsString(MessagePublish(content, topic, msgType))
+        val message = mapper.writeValueAsString(MessagePublish(content, topic, messageType))
         val res =  postJson("publish", message)
-        return res.statusCode() == 200
-    }
-
-    override fun createTopic(name: String) : Boolean {
-        val mapper = jacksonObjectMapper()
-        val message = mapper.writeValueAsString(Name(name))
-        val res =  postJson("topics", message)
-        return res.statusCode() == 200
-    }
-
-    override fun deleteTopic(name: String) : Boolean {
-        val mapper = jacksonObjectMapper()
-        val message = mapper.writeValueAsString(Name(name))
-        val res =  deleteJson("topics", message)
         return res.statusCode() == 200
     }
 

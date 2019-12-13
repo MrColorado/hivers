@@ -1,6 +1,6 @@
 package com.epita.models
 
-interface BrokerClient {
+interface BrokerClientInterface {
 
     fun subscribe(topic: String, subscriber: Subscriber) : String?
 
