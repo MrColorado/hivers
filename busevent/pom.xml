@@ -46,10 +46,6 @@
             <artifactId>slf4j-simple</artifactId>
         </dependency>
         <dependency>
-        <groupId>khttp</groupId>
-            <artifactId>khttp</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.epita</groupId>
             <artifactId>hivers</artifactId>
             <version>1.0-SNAPSHOT</version>

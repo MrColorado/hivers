@@ -13,6 +13,8 @@
     <artifactId>hivers</artifactId>
     <packaging>jar</packaging>
 
+    <name>com.epita hivers</name>
+
     <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
