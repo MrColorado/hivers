@@ -14,7 +14,7 @@ import java.util.regex.Pattern
 
 class CrawlerSubscriber : Subscriber {
 
-    val publisher: Publisher
+    private val publisher: Publisher
 
     constructor(brokerClient: BrokerClientInterface, topic: String, publisher: Publisher) : super(brokerClient, topic) {
         init()

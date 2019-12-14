@@ -21,7 +21,7 @@ fun main() {
 
     CrawlerSubscriber(
         hivers.instanceOf(BrokerClientInterface::class.java),
-        "crawl-url",
+        "crawl-url-command",
         publisher
     )
 

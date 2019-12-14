@@ -1,4 +1,4 @@
-package com.epita.indexer.impl
+package com.epita.index.impl
 
 import com.epita.indexer.core.Indexer
 import com.epita.tfidf.models.Vectorized
