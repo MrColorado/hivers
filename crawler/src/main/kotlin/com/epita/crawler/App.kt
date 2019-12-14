@@ -1,6 +1,8 @@
 package com.epita.crawler
 
 import com.epita.brokerclient.client.BrokerClient
+import com.epita.crawler.core.CrawlerServiceInterface
+import com.epita.crawler.impl.CrawlerService
 import com.epita.crawler.subscribers.CrawlUrlCommandSubscriber
 import com.epita.hivers.core.Hivers
 import com.epita.models.Constants
@@ -15,6 +17,7 @@ fun main() {
     val hivers = Hivers {
         bean(BrokerClientInterface::class.java, BrokerClient(Constants.serverUrl))
         bean(PublisherInterface::class.java, Publisher(instanceOf(BrokerClientInterface::class.java)))
+        bean(CrawlerServiceInterface::class.java, CrawlerService(instanceOf(PublisherInterface::class.java)))
     }
 
     val publisher = hivers.instanceOf(PublisherInterface::class.java)
@@ -24,7 +27,7 @@ fun main() {
     CrawlUrlCommandSubscriber(
         hivers.instanceOf(BrokerClientInterface::class.java),
         "crawl-url-command",
-        publisher
+        hivers.instanceOf(CrawlerServiceInterface::class.java)
     )
 
     publisher.publish("crawler-init-command", CrawlerInitCommand(crawlerId),
