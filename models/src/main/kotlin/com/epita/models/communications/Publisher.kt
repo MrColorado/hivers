@@ -1,4 +1,4 @@
-package com.epita.models
+package com.epita.models.communications
 
 class Publisher(val brokerClient: BrokerClientInterface) {
 

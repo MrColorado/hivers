@@ -1,7 +1,7 @@
 package com.epita.domainserver.scraper.subscribers
 
-import com.epita.models.BrokerClientInterface
-import com.epita.models.Subscriber
+import com.epita.models.communications.BrokerClientInterface
+import com.epita.models.communications.Subscriber
 import com.epita.models.commands.CrawlerInitCommand
 
 class CrawlerInitSubscriber : Subscriber {

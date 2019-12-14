@@ -1,4 +1,4 @@
-package com.epita.models
+package com.epita.models.communications
 
 abstract class Subscriber (val brokerClient: BrokerClientInterface, val topic: String) {
     private var id: String = ""

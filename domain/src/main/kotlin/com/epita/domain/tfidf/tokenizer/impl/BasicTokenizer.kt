@@ -1,7 +1,7 @@
 package com.epita.domain.tfidf.tokenizer.impl
 
 import com.epita.domain.tfidf.models.Cleaned
-import com.epita.domain.tfidf.models.Tokenized
+import com.epita.models.tfidf.Tokenized
 import com.epita.domain.tfidf.tokenizer.core.Tokenizer
 import com.epita.domain.tfidf.utils.IO
 import com.epita.domain.tfidf.utils.Stemming

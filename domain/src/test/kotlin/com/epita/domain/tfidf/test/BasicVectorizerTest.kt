@@ -1,7 +1,7 @@
 package com.epita.domain.tfidf.test
 
-import com.epita.domain.tfidf.models.Tokenized
-import com.epita.domain.tfidf.models.Vectorized
+import com.epita.models.tfidf.Tokenized
+import com.epita.models.tfidf.Vectorized
 import com.epita.domain.tfidf.vectorizer.impl.BasicVectorizer
 import org.junit.Test
 class BasicVectorizerTest {

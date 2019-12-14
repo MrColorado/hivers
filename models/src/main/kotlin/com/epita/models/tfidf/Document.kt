@@ -1,4 +1,4 @@
-package com.epita.domain.tfidf.models
+package com.epita.models.tfidf
 
 interface Document {
     val url: String

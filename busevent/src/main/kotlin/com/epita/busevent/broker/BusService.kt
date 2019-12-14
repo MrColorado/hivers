@@ -2,10 +2,8 @@ package com.epita.busevent.broker
 
 
 import com.epita.busevent.LoggerInterface
-import com.epita.models.Message
-import com.epita.models.MessageString
-import com.epita.models.MessageType
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.epita.models.communications.MessageString
+import com.epita.models.communications.MessageType
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI

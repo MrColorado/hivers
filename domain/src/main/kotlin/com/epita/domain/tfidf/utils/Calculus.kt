@@ -1,6 +1,6 @@
 package com.epita.domain.tfidf.utils
 
-import com.epita.domain.tfidf.models.TfIdfByWord
+import com.epita.models.tfidf.TfIdfByWord
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt

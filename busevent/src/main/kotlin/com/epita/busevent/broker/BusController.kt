@@ -4,9 +4,7 @@ import com.epita.busevent.LoggerInterface
 import com.epita.busevent.models.Subscribe
 import io.javalin.http.Context
 import com.epita.busevent.models.UnSubscribe
-import com.epita.models.Message
-import com.epita.models.MessageString
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.epita.models.communications.MessageString
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 

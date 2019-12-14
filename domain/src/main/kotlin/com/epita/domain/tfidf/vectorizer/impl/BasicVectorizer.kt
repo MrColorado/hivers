@@ -1,8 +1,8 @@
 package com.epita.domain.tfidf.vectorizer.impl
 
-import com.epita.domain.tfidf.models.KeywordData
-import com.epita.domain.tfidf.models.Tokenized
-import com.epita.domain.tfidf.models.Vectorized
+import com.epita.models.tfidf.KeywordData
+import com.epita.models.tfidf.Tokenized
+import com.epita.models.tfidf.Vectorized
 import com.epita.domain.tfidf.vectorizer.core.Vectorizer
 
 class BasicVectorizer : Vectorizer {

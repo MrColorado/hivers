@@ -3,16 +3,16 @@ package com.epita.domainserver.scraper
 import com.epita.domainserver.scraper.subscribers.CrawledSubscriber
 import com.epita.domainserver.scraper.subscribers.CrawlerInitSubscriber
 import com.epita.domainserver.scraper.subscribers.NotCrawledSubscriber
-import com.epita.models.BrokerClientInterface
-import com.epita.models.MessageType
-import com.epita.models.Publisher
+import com.epita.models.communications.BrokerClientInterface
+import com.epita.models.communications.MessageType
+import com.epita.models.communications.Publisher
 import com.epita.models.commands.CrawlerCommand
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class Scraper(val brokerClient: BrokerClientInterface, val publisher: Publisher) {
-    val visitedLinks: ConcurrentLinkedQueue<String> = ConcurrentLinkedQueue()
-    val toVisitLinks: ConcurrentLinkedQueue<String> = ConcurrentLinkedQueue()
-    val crawlerList: ConcurrentLinkedQueue<String> = ConcurrentLinkedQueue()
+class Scraper(private val brokerClient: BrokerClientInterface, private val publisher: Publisher) {
+    private val visitedLinks: ConcurrentLinkedQueue<String> = ConcurrentLinkedQueue()
+    private val toVisitLinks: ConcurrentLinkedQueue<String> = ConcurrentLinkedQueue()
+    private val crawlerList: ConcurrentLinkedQueue<String> = ConcurrentLinkedQueue()
 
     fun start() {
         toVisitLinks.addAll(Constants.urls)

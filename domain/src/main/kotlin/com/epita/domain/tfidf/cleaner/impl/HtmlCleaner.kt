@@ -2,7 +2,7 @@ package com.epita.domain.tfidf.cleaner.impl
 
 import com.epita.domain.tfidf.cleaner.core.CleanerServiceInterface
 import com.epita.domain.tfidf.models.Cleaned
-import com.epita.domain.tfidf.models.DocumentWithUrl
+import com.epita.models.tfidf.DocumentWithUrl
 
 class HtmlCleaner : CleanerServiceInterface {
     override fun compute(document: DocumentWithUrl): Cleaned {

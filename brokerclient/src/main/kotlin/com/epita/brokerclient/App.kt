@@ -1,10 +1,10 @@
 package com.epita.brokerclient
 
 import com.epita.brokerclient.client.BrokerClient
-import com.epita.models.BrokerClientInterface
-import com.epita.models.MessageType
-import com.epita.models.Publisher
-import com.epita.models.Subscriber
+import com.epita.models.communications.BrokerClientInterface
+import com.epita.models.communications.MessageType
+import com.epita.models.communications.Publisher
+import com.epita.models.communications.Subscriber
 import com.epita.models.test.TestObject
 
 class TestSubscriber(brokerClient: BrokerClientInterface, topic: String)

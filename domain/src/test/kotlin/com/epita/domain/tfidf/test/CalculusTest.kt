@@ -1,6 +1,6 @@
 package com.epita.domain.tfidf.test
 
-import com.epita.domain.tfidf.models.TfIdfByWord
+import com.epita.models.tfidf.TfIdfByWord
 import com.epita.domain.tfidf.utils.Calculus
 import org.junit.Test
 import kotlin.math.abs

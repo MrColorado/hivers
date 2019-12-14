@@ -2,7 +2,10 @@ package com.epita.brokerclient.client
 
 import com.epita.brokerclient.models.UrlWithTopic
 import com.epita.brokerclient.models.*
-import com.epita.models.*
+import com.epita.models.communications.BrokerClientInterface
+import com.epita.models.communications.MessageString
+import com.epita.models.communications.MessageType
+import com.epita.models.communications.Subscriber
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.javalin.Javalin
@@ -110,7 +113,14 @@ class BrokerClient(private val serverUrl: String) : BrokerClientInterface, Clien
     override fun <MSG_TYPE> publish(topic: String, msg: MSG_TYPE, messageType: MessageType, classType: Class<MSG_TYPE>) : Boolean {
         val mapper = jacksonObjectMapper()
         val content = mapper.writeValueAsString(msg)
-        val message = mapper.writeValueAsString(MessageString(messageType, content, classType.name, topic))
+        val message = mapper.writeValueAsString(
+            MessageString(
+                messageType,
+                content,
+                classType.name,
+                topic
+            )
+        )
         val res =  postJson("publish", message)
         return res.statusCode() == 200
     }

@@ -1,6 +1,6 @@
 package com.epita.busevent.broker
 
-import com.epita.models.MessageString
+import com.epita.models.communications.MessageString
 
 
 interface BusServiceInterface {

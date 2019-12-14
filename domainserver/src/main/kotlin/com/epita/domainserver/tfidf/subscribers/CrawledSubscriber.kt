@@ -1,9 +1,9 @@
 package com.epita.domainserver.tfidf.subscribers
 
-import com.epita.domain.tfidf.models.DocumentWithUrl
-import com.epita.models.BrokerClientInterface
-import com.epita.models.Publisher
-import com.epita.models.Subscriber
+import com.epita.models.tfidf.DocumentWithUrl
+import com.epita.models.communications.BrokerClientInterface
+import com.epita.models.communications.Publisher
+import com.epita.models.communications.Subscriber
 import com.epita.models.events.CrawledEvent
 
 class CrawledSubscriber : Subscriber {

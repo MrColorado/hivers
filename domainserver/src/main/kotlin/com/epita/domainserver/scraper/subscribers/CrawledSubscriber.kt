@@ -1,7 +1,7 @@
 package com.epita.domainserver.scraper.subscribers
 
-import com.epita.models.BrokerClientInterface
-import com.epita.models.Subscriber
+import com.epita.models.communications.BrokerClientInterface
+import com.epita.models.communications.Subscriber
 import com.epita.models.events.CrawledEvent
 
 class CrawledSubscriber : Subscriber {
