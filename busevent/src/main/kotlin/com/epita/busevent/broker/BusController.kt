@@ -23,6 +23,7 @@ class BusController(private val service: BusServiceInterface) : BusControllerInt
         val id = service.subscribe(obj.url, obj.topic)
         if (id == null) {
             it.status(404)
+            it.html("notfound")
         }
         else {
             it.json(id)
@@ -45,5 +46,6 @@ class BusController(private val service: BusServiceInterface) : BusControllerInt
 
         service.publish(obj, it.body())
         it.status(200)
+        it.html("ok")
     }
 }

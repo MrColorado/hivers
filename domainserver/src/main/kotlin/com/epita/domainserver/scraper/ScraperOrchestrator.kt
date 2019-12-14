@@ -18,7 +18,8 @@ class ScraperOrchestrator(val brokerClient: BrokerClientInterface, val publisher
     fun start() {
         toVisitLinks.addAll(Constants.urls)
         CrawlerInitSubscriber(brokerClient, "crawler-init-command") { id -> initCrawler(id) }
-        CrawledSubscriber(brokerClient, "crawled-event") { url, urls ->  crawledEvent(url, urls) }
+        CrawledSubscriber(brokerClient, "crawled-event") { url, urls -> crawledEvent(url, urls) }
+        //CrawledSubscriber(brokerClient, "crawled-event") { url, urls ->   }
         NotCrawledSubscriber(brokerClient, "not-crawled-event") { url -> notCrawlerEvent(url) }
     }
 
@@ -27,6 +28,7 @@ class ScraperOrchestrator(val brokerClient: BrokerClientInterface, val publisher
         while (visitedLinks.contains(url))
             url = toVisitLinks.remove()
         publisher.publish("crawl-url-command", CrawlerCommand(url), MessageType.ONCE, CrawlerCommand::class.java)
+        println("END START CRAWLER")
     }
 
     private fun initCrawler(id: String) {

@@ -12,8 +12,9 @@ import com.epita.models.tfidf.DocumentWithUrl
 import java.util.concurrent.ConcurrentLinkedQueue
 
 class IndexerOrchestrator(val brokerClient: BrokerClientInterface, val publisher: Publisher) {
-    val documentToIndex: ConcurrentLinkedQueue<DocumentWithUrl> = ConcurrentLinkedQueue()
-    val indexerList: ConcurrentLinkedQueue<IndexerAvailability> = ConcurrentLinkedQueue()
+    private val documentToIndex: ConcurrentLinkedQueue<DocumentWithUrl> = ConcurrentLinkedQueue()
+    private val indexerList: ConcurrentLinkedQueue<IndexerAvailability> = ConcurrentLinkedQueue()
+    private var availableIndexer = 0
 
     fun start() {
         IndexedDocumentSubscriber(brokerClient, "indexed-document-event") { id -> availableIndexer(id) }
@@ -22,10 +23,11 @@ class IndexerOrchestrator(val brokerClient: BrokerClientInterface, val publisher
     }
 
     private fun dispatchDocument() {
-        val indexer = indexerList.find { it.available } ?: return
+        if (availableIndexer <= 0)
+            return
         val crawledDocument = documentToIndex.first() ?: return
 
-        indexerList.map { if (it.id == indexer.id) it.available = false }
+        availableIndexer -= 1
         documentToIndex.remove(crawledDocument)
 
         publisher.publish("index-document-command", IndexCommand(crawledDocument.url, crawledDocument.text),
@@ -39,11 +41,12 @@ class IndexerOrchestrator(val brokerClient: BrokerClientInterface, val publisher
 
     private fun registerIndexer(id: String) {
         indexerList.add(IndexerAvailability(id, true))
+        availableIndexer += 1
         dispatchDocument()
     }
 
     private fun availableIndexer(id: String) {
-        indexerList.map { if (it.id == id) { it.available = true } }
+        availableIndexer += 1
         dispatchDocument()
     }
 }

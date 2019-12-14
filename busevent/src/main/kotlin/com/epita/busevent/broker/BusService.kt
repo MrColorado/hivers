@@ -28,6 +28,15 @@ class BusService : BusServiceInterface {
         return client.send(request, HttpResponse.BodyHandlers.ofString())
     }
 
+    private fun postJsonAsync(url: String, jsonString: String) {
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create(url))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(jsonString)).build()
+
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+    }
+
     private fun hashString(type: String, input: String): String {
         //TODO: move to constant
         val HEX_CHARS = "0123456789ABCDEF"
@@ -72,14 +81,14 @@ class BusService : BusServiceInterface {
         }
         if (message.msgType == MessageType.BROADCAST) {
             clientsByTopic[message.topic]!!.map {
-                postJson(urlByClient[it]!!, json)
+                postJsonAsync(urlByClient[it]!!, json)
             }
         }
         else {
             val maxSize = clientsByTopic[message.topic]!!.size
             val position = Random.nextInt(maxSize)
             val id = clientsByTopic[message.topic]!!.elementAt(position)
-            postJson(urlByClient[id]!!, json)
+            postJsonAsync(urlByClient[id]!!, json)
         }
     }
 

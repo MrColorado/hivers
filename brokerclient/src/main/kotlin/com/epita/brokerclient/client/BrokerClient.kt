@@ -26,7 +26,7 @@ class BrokerClient(private val serverUrl: String) : BrokerClientInterface, Clien
 
     private val logger = LoggerFactory.getLogger(this.javaClass.name)
 
-    private val subscribers : MutableMap<String, Subscriber> = HashMap()
+    private val subscribers : MutableMap<String, MutableList<Subscriber>> = HashMap()
 
     override val getMessage: (Context) -> Unit = {
         try {
@@ -35,10 +35,20 @@ class BrokerClient(private val serverUrl: String) : BrokerClientInterface, Clien
             val mapper = jacksonObjectMapper()
             val msg = mapper.readValue<MessageString>(body)
 
-            val subscriber = subscribers.get(msg.topic)
+            var subscriberList = subscribers.get(msg.topic)
+            if (subscriberList == null)
+                subscriberList = arrayListOf()
 
             val obj = mapper.readValue(msg.json, Class.forName(msg.objectClass))
-            subscriber?.handle(obj)
+
+            subscriberList?.forEach {
+                try {
+                    it.handle(obj)
+                }
+                catch (e: Exception) {
+                    println(e)
+                }
+            }
         } catch (e: Exception) {
             logger.error(e.message)
         }
@@ -80,9 +90,18 @@ class BrokerClient(private val serverUrl: String) : BrokerClientInterface, Clien
             .uri(URI.create(serverUrl + endpoint))
             .header("Content-Type", "application/json")
             .POST(HttpRequest.BodyPublishers.ofString(jsonString)).build()
-
         val response = client.send(request, HttpResponse.BodyHandlers.ofString())
         return response
+    }
+
+    private fun postJsonAsync(endpoint: String, jsonString: String) {
+        val client = HttpClient.newBuilder().build()
+
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create(serverUrl + endpoint))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(jsonString)).build()
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
     }
 
     private fun deleteJson(endpoint: String, jsonString: String) : HttpResponse<String> {
@@ -100,7 +119,12 @@ class BrokerClient(private val serverUrl: String) : BrokerClientInterface, Clien
     override fun subscribe(topic: String, subscriber: Subscriber) : String? {
         logger.info("${subscriber.javaClass.name} subscribes ${subscriber.topic}")
 
-        subscribers[subscriber.topic] = subscriber
+        var subscriberList = subscribers[subscriber.topic]
+        if (null == subscriberList)
+            subscriberList = arrayListOf(subscriber)
+        else
+            subscriberList.add(subscriber)
+        subscribers[subscriber.topic] = subscriberList
         val mapper = jacksonObjectMapper()
         val message = mapper.writeValueAsString(UrlWithTopic(url, subscriber.topic))
         val res =  postJson("subscribe", message)
@@ -114,11 +138,12 @@ class BrokerClient(private val serverUrl: String) : BrokerClientInterface, Clien
     override fun unsubscribe(topic: String, id: String) : Boolean {
         logger.info("$id unsubscribes $topic")
 
-        val subscriber = subscribers.get(topic)
-        if (subscriber?.getId() == id) {
+        val subscriberList = subscribers.get(topic)
+        subscriberList?.filter { id != it.getId()}
+        if (null == subscriberList || subscriberList.isEmpty()) {
             subscribers.remove(topic)
         } else {
-            return false
+            subscribers[topic] = subscriberList
         }
 
         val mapper = jacksonObjectMapper()
@@ -141,8 +166,8 @@ class BrokerClient(private val serverUrl: String) : BrokerClientInterface, Clien
 
         logger.info("publish $topic")
 
-        val res =  postJson("publish", message)
-        return res.statusCode() == 200
+        val res =  postJsonAsync("publish", message)
+        return true
     }
 
     override fun listClients() : Set<Pair<String, String>> {
