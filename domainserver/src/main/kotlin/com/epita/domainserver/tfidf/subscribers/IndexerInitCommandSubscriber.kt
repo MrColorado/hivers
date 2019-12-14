@@ -4,7 +4,7 @@ import com.epita.models.commands.IndexerInitCommand
 import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.Subscriber
 
-class RegisterIndexerSubscriber : Subscriber {
+class IndexerInitCommandSubscriber : Subscriber {
 
     private val lambda: (url: String) -> Unit
 

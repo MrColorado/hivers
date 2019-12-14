@@ -10,7 +10,7 @@ import com.epita.index.controllers.IndexController
 import com.epita.index.controllers.IndexControllerInterface
 import com.epita.index.core.IndexServiceInterface
 import com.epita.index.impl.RetroIndex
-import com.epita.index.subscribers.IndexerSubscriber
+import com.epita.index.subscribers.IndexedDocumentEventSubscriber
 import com.epita.models.Constants
 import com.epita.models.communications.BrokerClientInterface
 import io.javalin.Javalin
@@ -26,7 +26,7 @@ fun main() {
         bean(IndexControllerInterface::class.java, IndexController(instanceOf(IndexServiceInterface::class.java)))
     }
 
-    IndexerSubscriber(hivers.instanceOf(BrokerClientInterface::class.java), "indexed-document-event",
+    IndexedDocumentEventSubscriber(hivers.instanceOf(BrokerClientInterface::class.java), "indexed-document-event",
         hivers.instanceOf(IndexServiceInterface::class.java))
 
     val app = Javalin.create { config ->

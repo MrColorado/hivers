@@ -4,7 +4,7 @@ import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.Subscriber
 import com.epita.models.events.IndexedEvent
 
-class IndexedDocumentSubscriber : Subscriber {
+class IndexedDocumentEventSubscriber : Subscriber {
 
     val lambda: (id: String) -> Unit
 

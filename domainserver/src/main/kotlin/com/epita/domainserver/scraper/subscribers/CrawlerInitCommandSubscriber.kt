@@ -2,9 +2,9 @@ package com.epita.domainserver.scraper.subscribers
 
 import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.Subscriber
-import com.epita.models.events.NotCrawledEvent
+import com.epita.models.commands.CrawlerInitCommand
 
-class NotCrawledSubscriber : Subscriber {
+class CrawlerInitCommandSubscriber : Subscriber {
 
     val lambda : (id: String) -> Unit
 
@@ -15,7 +15,7 @@ class NotCrawledSubscriber : Subscriber {
     }
 
     override fun <CLASS> handle(message: CLASS) {
-        val event = message as NotCrawledEvent
-        lambda(event.url)
+        val command = message as CrawlerInitCommand
+        lambda(command.id)
     }
 }

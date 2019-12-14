@@ -1,10 +1,7 @@
 package com.epita.crawler.subscribers
 
-import com.epita.models.communications.BrokerClientInterface
-import com.epita.models.communications.MessageType
-import com.epita.models.communications.Publisher
-import com.epita.models.communications.Subscriber
 import com.epita.models.commands.CrawlerCommand
+import com.epita.models.communications.*
 import com.epita.models.events.CrawledEvent
 import com.epita.models.events.NotCrawledEvent
 import org.jsoup.Jsoup
@@ -13,12 +10,12 @@ import java.lang.Exception
 import java.util.regex.Pattern
 
 
-class CrawlerSubscriber : Subscriber {
+class CrawlUrlCommandSubscriber : Subscriber {
 
-    private val publisher: Publisher
+    private val publisher: PublisherInterface
     private val logger = LoggerFactory.getLogger(this.javaClass.name)
 
-    constructor(brokerClient: BrokerClientInterface, topic: String, publisher: Publisher) : super(brokerClient, topic) {
+    constructor(brokerClient: BrokerClientInterface, topic: String, publisher: PublisherInterface) : super(brokerClient, topic) {
         init()
         this.publisher = publisher
     }

@@ -4,7 +4,7 @@ import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.Subscriber
 import com.epita.models.events.CrawledEvent
 
-class CrawledSubscriber : Subscriber {
+class CrawledEventSubscriber : Subscriber {
 
     val lambda: (String, List<String>) -> Unit
 

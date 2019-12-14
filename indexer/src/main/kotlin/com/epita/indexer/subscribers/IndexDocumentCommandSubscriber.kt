@@ -4,22 +4,19 @@ import com.epita.domain.tfidf.cleaner.core.CleanerServiceInterface
 import com.epita.domain.tfidf.tokenizer.core.TokenizerServiceInterface
 import com.epita.domain.tfidf.vectorizer.core.VectorizerServiceInterface
 import com.epita.models.commands.IndexCommand
-import com.epita.models.communications.BrokerClientInterface
-import com.epita.models.communications.MessageType
-import com.epita.models.communications.Publisher
-import com.epita.models.communications.Subscriber
+import com.epita.models.communications.*
 import com.epita.models.events.IndexedEvent
 import com.epita.models.tfidf.DocumentWithUrl
 
-class IndexerSubscriber : Subscriber {
+class IndexDocumentCommandSubscriber : Subscriber {
 
-    private val publisher: Publisher
+    private val publisher: PublisherInterface
     private val cleaner: CleanerServiceInterface
     private val tokenizer: TokenizerServiceInterface
     private val vectorizer: VectorizerServiceInterface
     private val indexerId: String
 
-    constructor(brokerClient: BrokerClientInterface, topic: String, publisher: Publisher,
+    constructor(brokerClient: BrokerClientInterface, topic: String, publisher: PublisherInterface,
                 cleaner: CleanerServiceInterface, tokenizer: TokenizerServiceInterface,
                 vectorizer: VectorizerServiceInterface, id: String) : super(brokerClient, topic) {
         init()

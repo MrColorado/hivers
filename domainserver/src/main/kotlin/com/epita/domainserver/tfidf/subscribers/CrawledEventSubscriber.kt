@@ -6,7 +6,7 @@ import com.epita.models.communications.Publisher
 import com.epita.models.communications.Subscriber
 import com.epita.models.events.CrawledEvent
 
-class RegisterCrawledSubscriber : Subscriber {
+class CrawledEventSubscriber : Subscriber {
 
     private val lambda : (document: DocumentWithUrl) -> Unit
 

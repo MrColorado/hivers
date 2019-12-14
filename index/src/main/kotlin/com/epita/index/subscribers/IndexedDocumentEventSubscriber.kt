@@ -5,7 +5,7 @@ import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.Subscriber
 import com.epita.models.events.IndexedEvent
 
-class IndexerSubscriber : Subscriber {
+class IndexedDocumentEventSubscriber : Subscriber {
 
     private val index: IndexServiceInterface
 
