@@ -34,7 +34,8 @@ fun main() {
         publisher,
         hivers.instanceOf(CleanerServiceInterface::class.java),
         hivers.instanceOf(TokenizerServiceInterface::class.java),
-        hivers.instanceOf(VectorizerServiceInterface::class.java)
+        hivers.instanceOf(VectorizerServiceInterface::class.java),
+        indexerId
     )
 
     publisher.publish("indexer-init-command", IndexerInitCommand(indexerId),
