@@ -20,10 +20,9 @@ import java.net.http.HttpResponse
 
 class BrokerClient(private val serverUrl: String) : BrokerClientInterface, ClientControllerInterface {
     companion object {
-        private val port: Int = ServerSocket(0).use { it.localPort }
         private const val endpoint: String = "/app/client"
-        private val url: String = "http://localhost:$port/$endpoint"
     }
+    private var url: String = ""
 
 
     private val app: Javalin = Javalin.create { config ->
@@ -59,8 +58,11 @@ class BrokerClient(private val serverUrl: String) : BrokerClientInterface, Clien
 
     init {
         try {
+            val port = ServerSocket(0).use { it.localPort }
             this.app.start(port)
                 .post(endpoint, this.getMessage)
+            this.url = "http://localhost:$port$endpoint"
+
         } catch (e: Exception) {
             logger.error("Cannot start broker client app at `$url`")
             logger.error(e.message)
