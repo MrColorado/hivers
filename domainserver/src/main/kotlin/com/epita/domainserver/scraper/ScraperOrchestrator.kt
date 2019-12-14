@@ -3,6 +3,7 @@ package com.epita.domainserver.scraper
 import com.epita.domainserver.scraper.subscribers.CrawledSubscriber
 import com.epita.domainserver.scraper.subscribers.CrawlerInitSubscriber
 import com.epita.domainserver.scraper.subscribers.NotCrawledSubscriber
+import com.epita.models.Constants
 import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.MessageType
 import com.epita.models.communications.Publisher

@@ -2,6 +2,7 @@ package com.epita.brokerclient.client
 
 import com.epita.brokerclient.models.UrlWithTopic
 import com.epita.brokerclient.models.*
+import com.epita.models.Constants
 import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.MessageString
 import com.epita.models.communications.MessageType
@@ -20,7 +21,7 @@ import java.net.http.HttpResponse
 class BrokerClient(private val serverUrl: String) : BrokerClientInterface, ClientControllerInterface {
     private val url : String
     private val app : Javalin = Javalin.create { config ->
-        config.requestCacheSize = 16777216
+        config.requestCacheSize = Constants.maxBodySize
     }
 
     private val logger = LoggerFactory.getLogger(this.javaClass.name)

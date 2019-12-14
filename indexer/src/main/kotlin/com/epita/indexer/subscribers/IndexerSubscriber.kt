@@ -3,6 +3,7 @@ package com.epita.indexer.subscribers
 import com.epita.domain.tfidf.cleaner.core.CleanerServiceInterface
 import com.epita.domain.tfidf.tokenizer.core.TokenizerServiceInterface
 import com.epita.domain.tfidf.vectorizer.core.VectorizerServiceInterface
+import com.epita.models.commands.IndexCommand
 import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.MessageType
 import com.epita.models.communications.Publisher
@@ -28,10 +29,11 @@ class IndexerSubscriber : Subscriber {
     }
 
     override fun <CLASS> handle(message: CLASS) {
-        val document = DocumentWithUrl("", "")
+        val indexDocument = message as IndexCommand
+        val document = DocumentWithUrl(indexDocument.url, indexDocument.document)
         val cleaned = cleaner.compute(document)
         val tokenized = tokenizer.compute(cleaned)
         val vectorized = vectorizer.compute(tokenized)
-        publisher.publish("indexed-event", IndexedEvent(vectorized), MessageType.BROADCAST, IndexedEvent::class.java)
+        publisher.publish("indexed-document-event", IndexedEvent(vectorized), MessageType.BROADCAST, IndexedEvent::class.java)
     }
 }

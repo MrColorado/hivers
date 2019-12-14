@@ -1,33 +1,38 @@
 package com.epita.index.impl
 
-import com.epita.tfidf.idf.impl.IdfCalculator
-import com.epita.index.core.Index
-import com.epita.tfidf.models.DocumentCosine
-import com.epita.tfidf.models.TfIdfByWord
-import com.epita.tfidf.models.Vectorized
-import com.epita.tfidf.utils.Calculus
+import com.epita.domain.tfidf.cleaner.core.CleanerServiceInterface
+import com.epita.domain.tfidf.tokenizer.core.TokenizerServiceInterface
+import com.epita.domain.tfidf.utils.Calculus
+import com.epita.domain.tfidf.utils.IdfCalculator
+import com.epita.domain.tfidf.vectorizer.core.VectorizerServiceInterface
+import com.epita.index.core.IndexServiceInterface
+import com.epita.models.tfidf.Cleaned
+import com.epita.models.tfidf.DocumentCosine
+import com.epita.models.tfidf.TfIdfByWord
+import com.epita.models.tfidf.Vectorized
 import java.util.concurrent.ConcurrentHashMap
 
-class BasicIndex : Index {
+class RetroIndex(val tokenizerService: TokenizerServiceInterface, val vectorizerService: VectorizerServiceInterface) : IndexServiceInterface {
     // {url:document}
     private val indexedDocuments: ConcurrentHashMap<String, Vectorized> = ConcurrentHashMap()
     // {keyword:[urls]}
     private val urlsForKeyword: ConcurrentHashMap<String, MutableSet<String>> = ConcurrentHashMap()
 
-    override fun insert(keyword: String, document: Vectorized) {
+    private fun insert(keyword: String, document: Vectorized) {
         val urls = urlsForKeyword.getOrPut(keyword) { mutableSetOf() }
         urls.add(document.url)
     }
 
     override fun index(document: Vectorized) {
         indexedDocuments[document.url] = document
+        document.keywords.forEach { (key, _) -> insert(key, document) }
     }
 
     private fun search(keyword: String): Set<String> {
         return urlsForKeyword.getOrDefault(keyword, mutableSetOf())
     }
 
-    override fun search(query: Vectorized) : List<DocumentCosine> {
+    private fun search(query: Vectorized) : List<DocumentCosine> {
         val matchingDocuments = query.keywords
                 .flatMap { search(it.key) }
                 .map { indexedDocuments[it]!! }
@@ -41,11 +46,17 @@ class BasicIndex : Index {
                 .sortedBy { it.cosine }
     }
 
+    override fun query(query: String) : List<DocumentCosine> {
+        val tokenized = tokenizerService.compute(Cleaned(query, query))
+        val vectorized = vectorizerService.compute(tokenized)
+        return search(vectorized)
+    }
+
     override fun getCorpusSize(): Int {
         return indexedDocuments.size
     }
 
-    fun idfVector(vector: Vectorized, matchingSize: Int) : List<TfIdfByWord> {
+    private fun idfVector(vector: Vectorized, matchingSize: Int) : List<TfIdfByWord> {
         return vector.keywords.map { (k, v) -> TfIdfByWord(v.frequency * IdfCalculator.compute(getCorpusSize(), matchingSize), k) }.toList()
     }
 

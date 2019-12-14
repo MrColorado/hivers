@@ -3,12 +3,13 @@ package com.epita.domainserver
 import com.epita.brokerclient.client.BrokerClient
 import com.epita.domainserver.scraper.ScraperOrchestrator
 import com.epita.hivers.core.Hivers
+import com.epita.models.Constants
 import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.Publisher
 
 fun main() {
     val hivers = Hivers {
-        bean(BrokerClientInterface::class.java, BrokerClient("http://localhost:7000/"))
+        bean(BrokerClientInterface::class.java, BrokerClient(Constants.serverUrl))
     }
 
     val publisher =

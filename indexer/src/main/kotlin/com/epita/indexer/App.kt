@@ -9,6 +9,7 @@ import com.epita.domain.tfidf.vectorizer.core.VectorizerServiceInterface
 import com.epita.domain.tfidf.vectorizer.impl.BasicVectorizer
 import com.epita.hivers.core.Hivers
 import com.epita.indexer.subscribers.IndexerSubscriber
+import com.epita.models.Constants
 import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.MessageType
 import com.epita.models.communications.Publisher
@@ -17,7 +18,7 @@ import java.util.*
 
 fun main() {
     val hivers = Hivers {
-        bean(BrokerClientInterface::class.java, BrokerClient("http://localhost:7000/"))
+        bean(BrokerClientInterface::class.java, BrokerClient(Constants.serverUrl))
         bean(CleanerServiceInterface::class.java, HtmlCleaner())
         bean(TokenizerServiceInterface::class.java, BasicTokenizer())
         bean(VectorizerServiceInterface::class.java, BasicVectorizer())

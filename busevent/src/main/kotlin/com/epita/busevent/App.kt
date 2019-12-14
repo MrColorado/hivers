@@ -5,11 +5,12 @@ import com.epita.busevent.broker.BusController
 import com.epita.busevent.broker.BusService
 import com.epita.busevent.broker.BusControllerInterface
 import com.epita.hivers.core.Hivers
+import com.epita.models.Constants
 import io.javalin.Javalin
 
 fun main() {
     val app = Javalin.create { config ->
-        config.requestCacheSize = 16777216
+        config.requestCacheSize = Constants.maxBodySize
     }
 
     val hivers = Hivers {
@@ -19,7 +20,7 @@ fun main() {
 
     val busController = hivers.instanceOf(BusControllerInterface::class.java)
 
-    app.start(7000)
+    app.start(Constants.serverPort)
         .get("") { context -> context.html("Hello!") }
         .get("/clients", busController.listClients)
         .post("/subscribe", busController.subscribe)
