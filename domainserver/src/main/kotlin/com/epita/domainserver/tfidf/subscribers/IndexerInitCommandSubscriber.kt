@@ -4,14 +4,14 @@ import com.epita.models.commands.IndexerInitCommand
 import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.Subscriber
 
-class IndexerInitCommandSubscriber : Subscriber {
-
+class IndexerInitCommandSubscriber(
+    brokerClient: BrokerClientInterface,
+    topic: String,
     private val lambda: (url: String) -> Unit
+) : Subscriber(brokerClient, topic) {
 
-    constructor(brokerClient: BrokerClientInterface, topic: String, lambda:(url: String) -> Unit) :
-            super(brokerClient, topic) {
+    init {
         init()
-        this.lambda = lambda
     }
 
     override fun <CLASS> handle(message: CLASS) {

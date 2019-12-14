@@ -4,14 +4,14 @@ import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.Subscriber
 import com.epita.models.events.CrawledEvent
 
-class CrawledEventSubscriber : Subscriber {
-
+class CrawledEventSubscriber(
+    brokerClient: BrokerClientInterface,
+    topic: String,
     val lambda: (String, List<String>) -> Unit
+) : Subscriber(brokerClient, topic) {
 
-    constructor(brokerClient: BrokerClientInterface, topic: String, lambda:(String, List<String>) -> Unit) :
-            super(brokerClient, topic) {
+    init {
         init()
-        this.lambda = lambda
     }
     override fun <CLASS> handle(message: CLASS) {
         val crawledEvent = message as CrawledEvent

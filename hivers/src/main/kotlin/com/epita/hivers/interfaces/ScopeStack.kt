@@ -8,10 +8,11 @@ import com.epita.hivers.core.Scope
 import java.util.*
 
 interface ScopeStack {
+    companion object {
+        const val MIN_STACK_SIZE: Int = 1
+    }
 
     fun getScopeStack(): Deque<Scope>
-    val MIN_STACK_SIZE: Int
-        get() = 1
 
 
     @Pure

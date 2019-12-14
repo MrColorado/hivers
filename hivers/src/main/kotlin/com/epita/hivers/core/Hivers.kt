@@ -2,6 +2,7 @@ package com.epita.hivers.core
 
 import com.epita.hivers.annotations.NotPure
 import com.epita.hivers.annotations.Pure
+import com.epita.hivers.exception.ImplementationNotFoundException
 import com.epita.hivers.interfaces.Provider
 import com.epita.hivers.interfaces.ScopeStack
 import java.lang.Exception
@@ -39,7 +40,7 @@ class Hivers(initializer: Hivers.() -> Unit) : Scope(), ScopeStack {
     @Pure
     fun <BEAN_TYPE> instanceOf(expectedClass: Class<BEAN_TYPE>): BEAN_TYPE {
         val provider = getProviderClass(expectedClass)
-        return provider.provide() ?: throw Exception("Implementation not found")
+        return provider.provide() ?: throw ImplementationNotFoundException()
     }
 
     @NotPure

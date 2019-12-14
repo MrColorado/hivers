@@ -1,6 +1,3 @@
 package com.epita.hivers.provider.aspects
 
-class After<BEAN_TYPE> : AbstractAspect<BEAN_TYPE> {
-
-    constructor(lambda: () -> Unit, methodName: String) : super(lambda, methodName)
-}
+class After<BEAN_TYPE>(lambda: () -> Unit, methodName: String) : AbstractAspect<BEAN_TYPE>(lambda, methodName)

@@ -6,29 +6,30 @@ import com.epita.domainserver.scraper.subscribers.CrawledEventSubscriber
 import com.epita.domainserver.scraper.subscribers.CrawlerInitCommandSubscriber
 import com.epita.domainserver.scraper.subscribers.NotCrawledEventSubscriber
 import com.epita.models.Constants
+import com.epita.models.Topics
+import com.epita.models.commands.CrawlerCommand
 import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.MessageType
-import com.epita.models.communications.Publisher
-import com.epita.models.commands.CrawlerCommand
 import com.epita.models.communications.PublisherInterface
 
 class CrawlerOrchestratorService(
     private val brokerClient: BrokerClientInterface, private val publisher: PublisherInterface,
-    private val entity: CrawlersStateEntity = CrawlersStateEntity()) : CrawlerOrchestratorServiceInterface {
+    private val entity: CrawlersStateEntity = CrawlersStateEntity()
+) : CrawlerOrchestratorServiceInterface {
 
     override fun start() {
         entity.toVisitLinks.addAll(Constants.urls)
-        CrawlerInitCommandSubscriber(brokerClient, "crawler-init-command") { id -> initCrawler(id) }
-        CrawledEventSubscriber(brokerClient, "crawled-event") { url, urls -> crawledEvent(url, urls) }
-        //CrawledSubscriber(brokerClient, "crawled-event") { url, urls ->   }
-        NotCrawledEventSubscriber(brokerClient, "not-crawled-event") { url -> notCrawlerEvent(url) }
+        CrawlerInitCommandSubscriber(brokerClient, Topics.CRAWLER_INIT_COMMAND.str) { id -> initCrawler(id) }
+        CrawledEventSubscriber(brokerClient, Topics.CRAWLED_EVENT.str) { url, urls -> crawledEvent(url, urls) }
+        //CrawledSubscriber(brokerClient, Topics.CRAWLED_EVENT.str) { url, urls ->   }
+        NotCrawledEventSubscriber(brokerClient, Topics.NOT_CRAWLED_EVENT.str) { url -> notCrawlerEvent(url) }
     }
 
     private fun startCrawler() {
         var url = entity.toVisitLinks.remove()
         while (entity.visitedLinks.contains(url))
             url = entity.toVisitLinks.remove()
-        publisher.publish("crawl-url-command", CrawlerCommand(url), MessageType.ONCE, CrawlerCommand::class.java)
+        publisher.publish(Topics.CRAWL_URL_COMMAND.str, CrawlerCommand(url), MessageType.ONCE, CrawlerCommand::class.java)
     }
 
     private fun initCrawler(id: String) {

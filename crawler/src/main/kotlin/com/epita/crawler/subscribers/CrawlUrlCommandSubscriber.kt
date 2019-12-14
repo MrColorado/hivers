@@ -1,23 +1,19 @@
 package com.epita.crawler.subscribers
 
 import com.epita.crawler.core.CrawlerServiceInterface
+import com.epita.models.communications.BrokerClientInterface
+import com.epita.models.communications.Subscriber
 import com.epita.models.commands.CrawlerCommand
-import com.epita.models.communications.*
-import com.epita.models.events.CrawledEvent
-import com.epita.models.events.NotCrawledEvent
-import org.jsoup.Jsoup
-import org.slf4j.LoggerFactory
-import java.lang.Exception
-import java.util.regex.Pattern
 
 
-class CrawlUrlCommandSubscriber : Subscriber {
-
+class CrawlUrlCommandSubscriber(
+    brokerClient: BrokerClientInterface,
+    topic: String,
     private val service: CrawlerServiceInterface
+) : Subscriber(brokerClient, topic) {
 
-    constructor(brokerClient: BrokerClientInterface, topic: String, service: CrawlerServiceInterface) : super(brokerClient, topic) {
+    init {
         init()
-        this.service = service
     }
 
     override fun <CLASS> handle(message: CLASS) {

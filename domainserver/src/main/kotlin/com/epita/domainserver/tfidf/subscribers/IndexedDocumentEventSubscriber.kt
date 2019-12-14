@@ -4,14 +4,14 @@ import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.Subscriber
 import com.epita.models.events.IndexedEvent
 
-class IndexedDocumentEventSubscriber : Subscriber {
-
+class IndexedDocumentEventSubscriber(
+    brokerClient: BrokerClientInterface,
+    topic: String,
     val lambda: (id: String) -> Unit
+) : Subscriber(brokerClient, topic) {
 
-    constructor(brokerClient: BrokerClientInterface, topic: String, lambda:(id: String) -> Unit) :
-            super(brokerClient, topic) {
+    init {
         init()
-        this.lambda = lambda
     }
 
     override fun <CLASS> handle(message: CLASS) {

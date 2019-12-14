@@ -1,6 +1,7 @@
 package com.epita.crawler.impl
 
 import com.epita.crawler.core.CrawlerServiceInterface
+import com.epita.models.Topics
 import com.epita.models.communications.MessageType
 import com.epita.models.communications.PublisherInterface
 import com.epita.models.events.CrawledEvent
@@ -11,10 +12,15 @@ import java.lang.Exception
 import java.util.regex.Pattern
 
 class CrawlerService(private val publisher: PublisherInterface) : CrawlerServiceInterface {
+    companion object {
+        private const val REGEX_DOMAIN_NAME = "[^/]/[^/]"
+        private const val TIMEOUT = 5000
+    }
+
     private val logger = LoggerFactory.getLogger(this.javaClass.name)
 
     override fun crawl(url: String) {
-        val pattern = Pattern.compile("[^/]/[^/]")
+        val pattern = Pattern.compile(REGEX_DOMAIN_NAME)
         val matcher = pattern.matcher(url)
         val index = if (!matcher.find()) {
             url.length
@@ -23,7 +29,7 @@ class CrawlerService(private val publisher: PublisherInterface) : CrawlerService
         }
         val rootUrl = url.substring(0, index)
         try {
-            Jsoup.connect(url).timeout(5000).get().run {
+            Jsoup.connect(url).timeout(TIMEOUT).get().run {
                 this.body().text()
                 val links = this.select("a[href]")
                 val hrefList = ArrayList<String>()
@@ -34,13 +40,13 @@ class CrawlerService(private val publisher: PublisherInterface) : CrawlerService
                     hrefList.add(href)
                 }
                 val crawledEvent = CrawledEvent(url, this.text(), hrefList)
-                publisher.publish("crawled-event", crawledEvent, MessageType.BROADCAST, CrawledEvent::class.java)
+                publisher.publish(Topics.CRAWLED_EVENT.str, crawledEvent, MessageType.BROADCAST, CrawledEvent::class.java)
             }
         }
         catch (e : Exception) {
             logger.error("Cannot parse url: $url")
             val notCrawledEvent = NotCrawledEvent(url)
-            publisher.publish("not-crawled-event", notCrawledEvent, MessageType.BROADCAST, NotCrawledEvent::class.java)
+            publisher.publish(Topics.NOT_CRAWLED_EVENT.str, notCrawledEvent, MessageType.BROADCAST, NotCrawledEvent::class.java)
         }
     }
 }

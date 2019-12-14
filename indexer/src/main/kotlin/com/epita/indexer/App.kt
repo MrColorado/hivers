@@ -12,6 +12,7 @@ import com.epita.indexer.core.IndexerServiceInterface
 import com.epita.indexer.impl.IndexerService
 import com.epita.indexer.subscribers.IndexDocumentCommandSubscriber
 import com.epita.models.Constants
+import com.epita.models.Topics
 import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.MessageType
 import com.epita.models.communications.Publisher
@@ -41,10 +42,10 @@ fun main() {
 
     IndexDocumentCommandSubscriber(
         hivers.instanceOf(BrokerClientInterface::class.java),
-        "index-document-command",
+        Topics.INDEX_DOCUMENT_COMMAND.str,
         hivers.instanceOf(IndexerServiceInterface::class.java)
     )
 
-    publisher.publish("indexer-init-command", IndexerInitCommand(indexerId),
+    publisher.publish(Topics.INDEXER_INIT_COMMAND.str, IndexerInitCommand(indexerId),
         MessageType.BROADCAST, IndexerInitCommand::class.java)
 }
