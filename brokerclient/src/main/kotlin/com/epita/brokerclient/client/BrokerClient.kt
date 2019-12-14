@@ -29,23 +29,31 @@ class BrokerClient(private val serverUrl: String) : BrokerClientInterface, Clien
     private val subscribers : MutableMap<String, Subscriber> = HashMap()
 
     override val getMessage: (Context) -> Unit = {
-        val body = it.body()
+        try {
+            val body = it.body()
 
-        val mapper = jacksonObjectMapper()
-        val msg = mapper.readValue<MessageString>(body)
+            val mapper = jacksonObjectMapper()
+            val msg = mapper.readValue<MessageString>(body)
 
-        val subscriber = subscribers.get(msg.topic)
+            val subscriber = subscribers.get(msg.topic)
 
-
-        val obj = mapper.readValue(msg.json, Class.forName(msg.objectClass))
-        subscriber?.handle(obj)
+            val obj = mapper.readValue(msg.json, Class.forName(msg.objectClass))
+            subscriber?.handle(obj)
+        } catch (e: Exception) {
+            logger.error(e.message)
+        }
     }
 
     init {
         val port = ServerSocket(0).use { it.localPort }
-        this.app.start(port)
-            .post("api/client", this.getMessage)
-        this.url = "http://localhost:" + app.port() + "/api/client"
+        this.url = "http://localhost:$port/api/client"
+        try {
+            this.app.start(port)
+                .post("api/client", this.getMessage)
+        } catch (e: Exception) {
+            logger.error("Cannot start broker client app at `$url`")
+            logger.error(e.message)
+        }
     }
 
     fun finalize() {
@@ -90,14 +98,22 @@ class BrokerClient(private val serverUrl: String) : BrokerClientInterface, Clien
     }
 
     override fun subscribe(topic: String, subscriber: Subscriber) : String? {
-        subscribers[topic] = subscriber
+        logger.info("${subscriber.javaClass.name} subscribes ${subscriber.topic}")
+
+        subscribers[subscriber.topic] = subscriber
         val mapper = jacksonObjectMapper()
-        val message = mapper.writeValueAsString(UrlWithTopic(url, topic))
+        val message = mapper.writeValueAsString(UrlWithTopic(url, subscriber.topic))
         val res =  postJson("subscribe", message)
-        return res.body()
+
+        val id = res.body()
+        logger.info("subscriber id for ${subscriber.topic} = $id")
+
+        return id
     }
 
     override fun unsubscribe(topic: String, id: String) : Boolean {
+        logger.info("$id unsubscribes $topic")
+
         val subscriber = subscribers.get(topic)
         if (subscriber?.getId() == id) {
             subscribers.remove(topic)

@@ -1,10 +1,8 @@
 package com.epita.busevent.broker
 
 
-import com.epita.busevent.LoggerInterface
 import com.epita.models.communications.MessageString
 import com.epita.models.communications.MessageType
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
 import java.net.http.HttpClient
@@ -15,7 +13,7 @@ import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 import kotlin.random.Random
 
-class BusService : BusServiceInterface, LoggerInterface {
+class BusService : BusServiceInterface {
     private val urlByClient: HashMap<String, String> = HashMap()
     private val clientsByTopic: HashMap<String, HashSet<String>> = HashMap()
     private val logger = LoggerFactory.getLogger(this.javaClass.name)
@@ -31,6 +29,7 @@ class BusService : BusServiceInterface, LoggerInterface {
     }
 
     private fun hashString(type: String, input: String): String {
+        //TODO: move to constant
         val HEX_CHARS = "0123456789ABCDEF"
         val bytes = MessageDigest
             .getInstance(type)
@@ -93,9 +92,5 @@ class BusService : BusServiceInterface, LoggerInterface {
         for (clients in clientsByTopic)
             result.addAll(listClients(clients.key))
         return result
-    }
-
-    override fun getLogger(): Logger {
-        return logger
     }
 }

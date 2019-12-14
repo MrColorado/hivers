@@ -8,6 +8,7 @@ import com.epita.models.commands.CrawlerCommand
 import com.epita.models.events.CrawledEvent
 import com.epita.models.events.NotCrawledEvent
 import org.jsoup.Jsoup
+import org.slf4j.LoggerFactory
 import java.lang.Exception
 import java.util.regex.Pattern
 
@@ -15,6 +16,7 @@ import java.util.regex.Pattern
 class CrawlerSubscriber : Subscriber {
 
     private val publisher: Publisher
+    private val logger = LoggerFactory.getLogger(this.javaClass.name)
 
     constructor(brokerClient: BrokerClientInterface, topic: String, publisher: Publisher) : super(brokerClient, topic) {
         init()
@@ -48,8 +50,7 @@ class CrawlerSubscriber : Subscriber {
             }
         }
         catch (e : Exception) {
-            // TODO log
-            println("Cannot parse url: $url")
+            logger.error("Cannot parse url: $url")
             val notCrawledEvent = NotCrawledEvent(url)
             publisher.publish("not-crawled-event", notCrawledEvent, MessageType.BROADCAST, NotCrawledEvent::class.java)
         }
