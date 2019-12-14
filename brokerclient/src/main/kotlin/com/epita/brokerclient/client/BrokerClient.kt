@@ -138,6 +138,9 @@ class BrokerClient(private val serverUrl: String) : BrokerClientInterface, Clien
                 topic
             )
         )
+
+        logger.info("publish $topic")
+
         val res =  postJson("publish", message)
         return res.statusCode() == 200
     }
