@@ -1,6 +1,6 @@
 package com.epita.domain.tfidf.cleaner.core
 
-import com.epita.domain.tfidf.models.Cleaned
+import com.epita.models.tfidf.Cleaned
 import com.epita.models.tfidf.DocumentWithUrl
 
 interface CleanerServiceInterface {

@@ -3,9 +3,9 @@ package com.epita.domain.tfidf.vectorizer.impl
 import com.epita.models.tfidf.KeywordData
 import com.epita.models.tfidf.Tokenized
 import com.epita.models.tfidf.Vectorized
-import com.epita.domain.tfidf.vectorizer.core.Vectorizer
+import com.epita.domain.tfidf.vectorizer.core.VectorizerServiceInterface
 
-class BasicVectorizer : Vectorizer {
+class BasicVectorizer : VectorizerServiceInterface {
     override fun compute(document: Tokenized): Vectorized {
         val map = HashMap<String, MutableList<Int>>()
 
