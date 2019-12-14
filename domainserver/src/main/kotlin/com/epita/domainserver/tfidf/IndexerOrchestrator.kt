@@ -1,6 +1,7 @@
 package com.epita.domainserver.tfidf
 
-import com.epita.domainserver.tfidf.subscribers.DispatchCrawledSubscriber
+import com.epita.domainserver.tfidf.models.IndexerAvailability
+import com.epita.domainserver.tfidf.subscribers.IndexedDocumentSubscriber
 import com.epita.domainserver.tfidf.subscribers.RegisterCrawledSubscriber
 import com.epita.domainserver.tfidf.subscribers.RegisterIndexerSubscriber
 import com.epita.models.commands.IndexCommand
@@ -12,31 +13,37 @@ import java.util.concurrent.ConcurrentLinkedQueue
 
 class IndexerOrchestrator(val brokerClient: BrokerClientInterface, val publisher: Publisher) {
     val documentToIndex: ConcurrentLinkedQueue<DocumentWithUrl> = ConcurrentLinkedQueue()
-    val indexerList: ConcurrentLinkedQueue<String> = ConcurrentLinkedQueue()
+    val indexerList: ConcurrentLinkedQueue<IndexerAvailability> = ConcurrentLinkedQueue()
 
     fun start() {
-        DispatchCrawledSubscriber(brokerClient, "indexed-document-event") { dispatchDocument() }
+        IndexedDocumentSubscriber(brokerClient, "indexed-document-event") { id -> availableIndexer(id) }
         RegisterCrawledSubscriber(brokerClient, "crawled-event") { document ->  registerDocument(document) }
-        RegisterIndexerSubscriber(brokerClient, "indexer-init-event") { url -> registerIndexer(url) }
+        RegisterIndexerSubscriber(brokerClient, "indexer-init-command") { url -> registerIndexer(url) }
     }
 
     private fun dispatchDocument() {
-        // TODO HANDLE 0 MASSAGE
-        if (documentToIndex.size > 0) {
-            val crawledDocument = documentToIndex.first()
-            documentToIndex.remove(crawledDocument)
-            publisher.publish("index-document-command", IndexCommand(crawledDocument.url, crawledDocument.text),
-                MessageType.ONCE, IndexCommand::class.java)
-        }
+        val indexer = indexerList.find { it.available } ?: return
+        val crawledDocument = documentToIndex.first() ?: return
+
+        indexerList.map { if (it.id == indexer.id) it.available = false }
+        documentToIndex.remove(crawledDocument)
+
+        publisher.publish("index-document-command", IndexCommand(crawledDocument.url, crawledDocument.text),
+            MessageType.ONCE, IndexCommand::class.java)
     }
 
     private fun registerDocument(document: DocumentWithUrl) {
         documentToIndex.add(document)
-    }
-
-    private fun registerIndexer(url: String) {
-        indexerList.add(url)
         dispatchDocument()
     }
 
+    private fun registerIndexer(id: String) {
+        indexerList.add(IndexerAvailability(id, true))
+        dispatchDocument()
+    }
+
+    private fun availableIndexer(id: String) {
+        indexerList.map { if (it.id == id) { it.available = true } }
+        dispatchDocument()
+    }
 }

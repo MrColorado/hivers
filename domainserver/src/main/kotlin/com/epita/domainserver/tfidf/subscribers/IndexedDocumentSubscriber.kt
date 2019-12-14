@@ -2,20 +2,21 @@ package com.epita.domainserver.tfidf.subscribers
 
 import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.Subscriber
+import com.epita.models.events.IndexedEvent
 
-class DispatchCrawledSubscriber : Subscriber {
+class IndexedDocumentSubscriber : Subscriber {
 
-    val lambda: () -> Unit
+    val lambda: (id: String) -> Unit
 
-    constructor(brokerClient: BrokerClientInterface, topic: String, lambda:() -> Unit) :
+    constructor(brokerClient: BrokerClientInterface, topic: String, lambda:(id: String) -> Unit) :
             super(brokerClient, topic) {
         init()
         this.lambda = lambda
     }
 
     override fun <CLASS> handle(message: CLASS) {
-
-        lambda()
+        val indexedEvent = message as IndexedEvent
+        lambda(indexedEvent.id)
     }
 
 }

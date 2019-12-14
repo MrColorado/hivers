@@ -1,7 +1,7 @@
 package com.epita.domainserver
 
 import com.epita.brokerclient.client.BrokerClient
-import com.epita.domainserver.scraper.Scraper
+import com.epita.domainserver.scraper.ScraperOrchestrator
 import com.epita.hivers.core.Hivers
 import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.Publisher
@@ -13,7 +13,7 @@ fun main() {
 
     val publisher =
         Publisher(hivers.instanceOf(BrokerClientInterface::class.java))
-    val scraper = Scraper.ScraperOrchestrator(hivers.instanceOf(BrokerClientInterface::class.java), publisher)
+    val scraper = ScraperOrchestrator(hivers.instanceOf(BrokerClientInterface::class.java), publisher)
 
     scraper.start()
 }
