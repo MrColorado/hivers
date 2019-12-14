@@ -4,6 +4,7 @@ import com.epita.models.tfidf.Tokenized
 import com.epita.models.tfidf.Vectorized
 import com.epita.domain.tfidf.vectorizer.impl.BasicVectorizer
 import org.junit.Test
+
 class BasicVectorizerTest {
     private fun check(vectorized: Vectorized, name: String, frequency: Double, vararg positions: Int) {
         assert(vectorized.keywords.containsKey(name))

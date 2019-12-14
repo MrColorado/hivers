@@ -9,7 +9,7 @@ import com.epita.models.communications.Publisher
 import com.epita.models.commands.CrawlerCommand
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class Scraper(private val brokerClient: BrokerClientInterface, private val publisher: Publisher) {
+class ScraperOrchestrator(val brokerClient: BrokerClientInterface, val publisher: Publisher) {
     private val visitedLinks: ConcurrentLinkedQueue<String> = ConcurrentLinkedQueue()
     private val toVisitLinks: ConcurrentLinkedQueue<String> = ConcurrentLinkedQueue()
     private val crawlerList: ConcurrentLinkedQueue<String> = ConcurrentLinkedQueue()

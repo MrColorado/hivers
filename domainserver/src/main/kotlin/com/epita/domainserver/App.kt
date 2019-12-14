@@ -2,7 +2,6 @@ package com.epita.domainserver
 
 import com.epita.brokerclient.client.BrokerClient
 import com.epita.domainserver.scraper.Scraper
-import com.epita.domainserver.tfidf.subscribers.CrawledSubscriber
 import com.epita.hivers.core.Hivers
 import com.epita.models.communications.BrokerClientInterface
 import com.epita.models.communications.Publisher
@@ -14,10 +13,7 @@ fun main() {
 
     val publisher =
         Publisher(hivers.instanceOf(BrokerClientInterface::class.java))
-    val scraper = Scraper(hivers.instanceOf(BrokerClientInterface::class.java), publisher)
-    CrawledSubscriber(hivers.instanceOf(BrokerClientInterface::class.java), "crawled-event",
-        publisher)
-
+    val scraper = Scraper.ScraperOrchestrator(hivers.instanceOf(BrokerClientInterface::class.java), publisher)
 
     scraper.start()
 }

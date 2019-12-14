@@ -6,17 +6,19 @@ import com.epita.models.communications.Publisher
 import com.epita.models.communications.Subscriber
 import com.epita.models.events.CrawledEvent
 
-class CrawledSubscriber : Subscriber {
+class RegisterCrawledSubscriber : Subscriber {
 
-    private val publisher: Publisher
+    private val lambda : (document: DocumentWithUrl) -> Unit
 
-    constructor(brokerClient: BrokerClientInterface, topic: String, publisher: Publisher) :
+    constructor(brokerClient: BrokerClientInterface, topic: String, lambda:(document: DocumentWithUrl) -> Unit) :
             super(brokerClient, topic) {
         init()
-        this.publisher = publisher
+        this.lambda = lambda
     }
+
     override fun <CLASS> handle(message: CLASS) {
         val crawledEvent = message as CrawledEvent
         val document = DocumentWithUrl(crawledEvent.url, crawledEvent.document)
+        lambda(document)
     }
 }
