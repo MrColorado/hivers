@@ -2,21 +2,40 @@ package com.epita.index.impl
 
 import com.epita.domain.tfidf.tokenizer.core.TokenizerServiceInterface
 import com.epita.domain.tfidf.utils.Calculus
+import com.epita.domain.tfidf.utils.IO
 import com.epita.domain.tfidf.utils.IdfCalculator
 import com.epita.domain.tfidf.vectorizer.core.VectorizerServiceInterface
 import com.epita.index.core.IndexServiceInterface
+import com.epita.index.models.RetroIndexModel
 import com.epita.models.tfidf.Cleaned
 import com.epita.models.tfidf.DocumentCosine
 import com.epita.models.tfidf.TfIdfByWord
 import com.epita.models.tfidf.Vectorized
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import java.io.*
 import java.util.concurrent.ConcurrentHashMap
 
 class RetroIndex(val tokenizerService: TokenizerServiceInterface, val vectorizerService: VectorizerServiceInterface) :
     IndexServiceInterface {
     // {url:document}
-    private val indexedDocuments: ConcurrentHashMap<String, Vectorized> = ConcurrentHashMap()
+    private var indexedDocuments: ConcurrentHashMap<String, Vectorized> = ConcurrentHashMap()
     // {keyword:[urls]}
-    private val urlsForKeyword: ConcurrentHashMap<String, MutableSet<String>> = ConcurrentHashMap()
+    private var urlsForKeyword: ConcurrentHashMap<String, MutableSet<String>> = ConcurrentHashMap()
+    private val fiveMin: Long = 1000 * 5
+
+    init {
+        /*
+        val retroIndex = importIndex()
+        indexedDocuments = retroIndex.indexedDocuments
+        urlsForKeyword = retroIndex.urlsForKeyword
+        */
+        Thread {
+            while (true) {
+                Thread.sleep(fiveMin)
+                exportIndex()
+            }
+        }.run()
+    }
 
     private fun insert(keyword: String, document: Vectorized) {
         val urls = urlsForKeyword.getOrPut(keyword) { mutableSetOf() }
@@ -66,6 +85,20 @@ class RetroIndex(val tokenizerService: TokenizerServiceInterface, val vectorizer
                 ), k
             )
         }.toList()
+    }
+
+    private fun exportIndex() {
+        val mapper = jacksonObjectMapper()
+        val retroIndex = RetroIndexModel(indexedDocuments, urlsForKeyword)
+        val serialized = mapper.writeValueAsString(retroIndex)
+        ObjectOutputStream(FileOutputStream("retro_index_data")).use{ it -> it.writeObject(serialized)}
+    }
+
+    private fun importIndex() : RetroIndexModel {
+        val mapper = jacksonObjectMapper()
+        val file = File("retro_index_data").readText()
+        val retroIndex = mapper.readValue(file, RetroIndexModel::class.java)
+        return retroIndex
     }
 
 }
