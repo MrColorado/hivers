@@ -1,6 +1,5 @@
 package com.epita.index.impl
 
-import com.epita.domain.tfidf.cleaner.core.CleanerServiceInterface
 import com.epita.domain.tfidf.tokenizer.core.TokenizerServiceInterface
 import com.epita.domain.tfidf.utils.Calculus
 import com.epita.domain.tfidf.utils.IdfCalculator
@@ -12,7 +11,8 @@ import com.epita.models.tfidf.TfIdfByWord
 import com.epita.models.tfidf.Vectorized
 import java.util.concurrent.ConcurrentHashMap
 
-class RetroIndex(val tokenizerService: TokenizerServiceInterface, val vectorizerService: VectorizerServiceInterface) : IndexServiceInterface {
+class RetroIndex(val tokenizerService: TokenizerServiceInterface, val vectorizerService: VectorizerServiceInterface) :
+    IndexServiceInterface {
     // {url:document}
     private val indexedDocuments: ConcurrentHashMap<String, Vectorized> = ConcurrentHashMap()
     // {keyword:[urls]}
@@ -32,21 +32,22 @@ class RetroIndex(val tokenizerService: TokenizerServiceInterface, val vectorizer
         return urlsForKeyword.getOrDefault(keyword, mutableSetOf())
     }
 
-    private fun search(query: Vectorized) : List<DocumentCosine> {
+    private fun search(query: Vectorized): List<String> {
         val matchingDocuments = query.keywords
-                .flatMap { search(it.key) }
-                .map { indexedDocuments[it]!! }
-                .map { Vectorized(it.url, it.keywords.filter { k -> query.keywords.containsKey(k.key) }) }
-                .toHashSet()
+            .flatMap { search(it.key) }
+            .map { indexedDocuments[it]!! }
+            .map { Vectorized(it.url, it.keywords.filter { k -> query.keywords.containsKey(k.key) }) }
+            .toHashSet()
 
         val queryVector = Calculus.normalize(idfVector(query, matchingDocuments.size))
-        val documentListVector = matchingDocuments.map { Pair(it.url, Calculus.normalize(idfVector(it, matchingDocuments.size))) }
+        val documentListVector =
+            matchingDocuments.map { Pair(it.url, Calculus.normalize(idfVector(it, matchingDocuments.size))) }
 
         return documentListVector.map { DocumentCosine(it.first, Calculus.cosineSimilarity(queryVector, it.second)) }
-                .sortedBy { it.cosine }
+            .sortedByDescending { it.cosine }.map { it.url }
     }
 
-    override fun query(query: String) : List<DocumentCosine> {
+    override fun query(query: String): List<String> {
         val tokenized = tokenizerService.compute(Cleaned(query, query))
         val vectorized = vectorizerService.compute(tokenized)
         return search(vectorized)
@@ -56,8 +57,15 @@ class RetroIndex(val tokenizerService: TokenizerServiceInterface, val vectorizer
         return indexedDocuments.size
     }
 
-    private fun idfVector(vector: Vectorized, matchingSize: Int) : List<TfIdfByWord> {
-        return vector.keywords.map { (k, v) -> TfIdfByWord(v.frequency * IdfCalculator.compute(getCorpusSize(), matchingSize), k) }.toList()
+    private fun idfVector(vector: Vectorized, matchingSize: Int): List<TfIdfByWord> {
+        return vector.keywords.map { (k, v) ->
+            TfIdfByWord(
+                v.frequency * IdfCalculator.compute(
+                    getCorpusSize(),
+                    matchingSize
+                ), k
+            )
+        }.toList()
     }
 
 }
