@@ -1,4 +1,4 @@
-package com.epita.domain.scraper.subscribers
+package com.epita.domainserver.scraper.subscribers
 
 import com.epita.models.BrokerClientInterface
 import com.epita.models.Subscriber

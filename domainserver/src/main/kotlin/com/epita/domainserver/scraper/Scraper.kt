@@ -1,12 +1,12 @@
-package com.epita.domain.scraper
+package com.epita.domainserver.scraper
 
-import com.epita.domain.scraper.subscribers.CrawledSubscriber
-import com.epita.domain.scraper.subscribers.CrawlerInitSubscriber
+import com.epita.domainserver.scraper.subscribers.CrawledSubscriber
+import com.epita.domainserver.scraper.subscribers.CrawlerInitSubscriber
+import com.epita.domainserver.scraper.subscribers.NotCrawledSubscriber
 import com.epita.models.BrokerClientInterface
 import com.epita.models.MessageType
 import com.epita.models.Publisher
 import com.epita.models.commands.CrawlerCommand
-import com.epita.models.events.CrawledEvent
 import java.util.concurrent.ConcurrentLinkedQueue
 
 class Scraper(val brokerClient: BrokerClientInterface, val publisher: Publisher) {
@@ -18,7 +18,7 @@ class Scraper(val brokerClient: BrokerClientInterface, val publisher: Publisher)
         toVisitLinks.addAll(Constants.urls)
         CrawlerInitSubscriber(brokerClient, "crawler-init-command") { id -> initCrawler(id) }
         CrawledSubscriber(brokerClient, "crawled-event") { url, urls ->  crawledEvent(url, urls) }
-        CrawlerInitSubscriber(brokerClient, "not-crawled-event") { url -> notCrawlerEvent(url) }
+        NotCrawledSubscriber(brokerClient, "not-crawled-event") { url -> notCrawlerEvent(url) }
     }
 
     private fun startCrawler() {

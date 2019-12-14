@@ -16,6 +16,7 @@
         <module>index</module>
         <module>models</module>
         <module>hivers</module>
+        <module>domainserver</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

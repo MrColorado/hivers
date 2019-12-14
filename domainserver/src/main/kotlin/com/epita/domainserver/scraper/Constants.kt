@@ -1,4 +1,4 @@
-package com.epita.domain.scraper
+package com.epita.domainserver.scraper
 
 class Constants {
     companion object {
